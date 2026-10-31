@@ -27,3 +27,10 @@ Repository Utama Aplikasi: [github.com/farizmirza/dhou-app](https://github.com/f
 
 5. **[vibe-coding-guidelines.md](vibe-coding-guidelines.md)**
    - Panduan kedisiplinan kode agar tetap modular, mudah dirawat (*maintainable*), batasan ukuran komponen, penanganan teks Arab RTL, dan aturan version control.
+
+6. **[AUTH_PRD.md](AUTH_PRD.md)**
+   - *Product Requirement Document* spesifik untuk modul Autentikasi Dhou (Login, Register, Lupa Kata Sandi, Google SSO, Logout, User Stories US01–US06, dan Business Rules).
+
+7. **[AUTH_FRD.md](AUTH_FRD.md)**
+   - *Functional Requirements Document* detail modul Autentikasi: Traceability matrix, spesifikasi fungsional FR-AUTH-01–06, kontrak API definitif, skema DDL PostgreSQL, skema validasi Zod, dan matriks kasus ekstrem fungsional (EC-01–EC-G06).
+
