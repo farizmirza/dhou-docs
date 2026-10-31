@@ -4,8 +4,8 @@
 
 | Item | Detail |
 | :--- | :--- |
-| **Document ID** | FRD-AUTH |
-| **Source PRD** | [PRD-AUTH — User Authentication & Identity Management, Version 2.0, Approved](AUTH_PRD.md) |
+| **Document ID** | FRD1 |
+| **Source PRD** | [PRD1 — User Authentication, Sign In, and Password Recovery, Version 2.0, Approved](../PRD/PRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md) |
 | **Feature ID** | AUTH-L-01, AUTH-L-02, AUTH-L-03, AUTH-L-04, AUTH-L-05 |
 | **Application** | Dhou (تطبيق ضوء) — Mobile Web (PWA) & iOS Native Wrapper (CapacitorJS) |
 | **Module** | Authentication & Account Security |
@@ -17,21 +17,21 @@
 | **Last Updated** | 2026-10-31 |
 | **Owner** | Product / Lead Engineering Dhou |
 | **Target Boundary Version** | `services/auth-api` v1.0.0, `apps/dhou-mobile` v1.0.0 |
-| **Dependencies** | PRD-AUTH, Supabase GoTrue Auth Service, Google Cloud OAuth 2.0 Identity Services, CapacitorJS Core |
+| **Dependencies** | PRD1, Supabase GoTrue Auth Service, Google Cloud OAuth 2.0 Identity Services, CapacitorJS Core |
 
 ---
 
 ## 1. Purpose, Sources, and Authority
 
-Dokumen ini menerjemahkan kebutuhan produk dari [PRD-AUTH — User Authentication & Identity Management](AUTH_PRD.md) menjadi spesifikasi fungsional konkret, kontrak API definitif, skema persistensi data PostgreSQL, penanganan kasus ekstrem (*edge cases*), serta rencana pengujian verifikasi yang mengikat bagi tim Frontend dan Backend.
+Dokumen ini menerjemahkan kebutuhan produk dari [PRD1 — User Authentication, Sign In, and Password Recovery](../PRD/PRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md) menjadi spesifikasi fungsional konkret, kontrak API definitif, skema persistensi data PostgreSQL, penanganan kasus ekstrem (*edge cases*), serta rencana pengujian verifikasi yang mengikat bagi tim Frontend dan Backend.
 
-PRD-AUTH memegang otoritas atas alur bisnis dan intensi produk (*product intent*). FRD-AUTH ini mengikat kontrak implementasi teknis fitur Autentikasi dan Manajemen Identitas pada Sprint 1.
+PRD1 memegang otoritas atas alur bisnis dan intensi produk (*product intent*). FRD1 ini mengikat kontrak implementasi teknis fitur Autentikasi dan Manajemen Identitas pada Sprint 1.
 
 | Sumber | Baseline yang Dibaca | Penggunaan |
 | :--- | :--- | :--- |
-| [AUTH_PRD.md](AUTH_PRD.md) | Versi 2.0, Approved | US01 s/d US06, Acceptance Criteria, Business Rules, UI Specs |
-| [design-system.md](design-system.md) | Versi 1.0, Approved | Token warna (`#FF8904`, `#ED7500`), tipografi (Fredoka, Poppins), tombol 3D |
-| [vibe-coding-guidelines.md](vibe-coding-guidelines.md) | Versi 1.0, Approved | Batasan komponen modular, penanganan RTL bahasa Arab, safe areas |
+| [PRD1](../PRD/PRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md) | Versi 2.0, Approved | US01 s/d US06, Acceptance Criteria, Business Rules, UI Specs |
+| [design-system.md](../../design-system.md) | Versi 1.0, Approved | Token warna (`#FF8904`, `#ED7500`), tipografi (Fredoka, Poppins), tombol 3D |
+| [vibe-coding-guidelines.md](../../vibe-coding-guidelines.md) | Versi 1.0, Approved | Batasan komponen modular, penanganan RTL bahasa Arab, safe areas |
 | [Supabase Auth Architecture](https://supabase.com/docs) | v2.0 Client SDK | JWT token rotation, PKCE OAuth flow, RLS policies |
 | [Capacitor Security Guidelines](https://capacitorjs.com) | v6.0 Core | Penanganan native OAuth tanpa embedded WebView |
 
@@ -404,7 +404,7 @@ Pencatatan aktivitas audit pada tabel `audit_logs`:
 ### 9.1 Status Persetujuan
 - **Otoritas**: Product Management & Lead Engineering Dhou.
 - **Disetujui Pada**: 2026-10-31.
-- **Dokumen Terkait**: [AUTH_PRD.md](AUTH_PRD.md).
+- **Dokumen Terkait**: [PRD1 — User Authentication, Sign In, and Password Recovery](../PRD/PRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md).
 
 ### 9.2 Pekerjaan Implementasi Tersisa
 1. **Supabase Schema Migration**: Menjalankan skrip DDL tabel `user_identities`, `password_reset_tokens`, dan `auth_lockouts`.

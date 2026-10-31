@@ -4,9 +4,9 @@
 
 | Item | Detail |
 | :--- | :--- |
-| **Document ID** | PRD-AUTH |
+| **Document ID** | PRD1 |
 | **Feature ID** | AUTH-L-01, AUTH-L-02, AUTH-L-03, AUTH-L-04, AUTH-L-05 |
-| **Feature Name** | User Authentication & Identity Management |
+| **Feature Name** | User Authentication, Sign In, and Password Recovery |
 | **Application** | Dhou (تطبيق ضوء) — Mobile Web (PWA) & iOS Native Wrapper (CapacitorJS) |
 | **Module** | Authentication & Account Security |
 | **Sprint** | Sprint 1 |
@@ -448,7 +448,7 @@ Sebagai pengguna yang telah selesai belajar atau menggunakan perangkat bersama, 
 ## 14. Rujukan Spesifikasi Implementasi
 
 Detail teknis, kontrak API, skema validasi Zod, dan matriks kasus ekstrem teknis berada pada dokumen FRD:
-- [Pemetaan Kebutuhan Fungsional](../AUTH_FRD.md#11-pemetaan-kebutuhan-produk-prd-ke-fungsionalitas-sistem-frd).
-- [Kontrak API Definitif & Penanganan Error](../AUTH_FRD.md#5-concrete-api-design).
-- [Skema Persistensi Database PostgreSQL](../AUTH_FRD.md#6-persistence-and-ownership).
-- [Matriks Lengkap Kasus Ekstrem Fungsional](../AUTH_FRD.md#4-matriks-lengkap-kasus-ekstrem-edge-cases-matrix).
+- [Pemetaan Kebutuhan Fungsional](../FRD/FRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md#11-pemetaan-kebutuhan-produk-prd-ke-fungsionalitas-sistem-frd).
+- [Kontrak API Definitif & Penanganan Error](../FRD/FRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md#5-concrete-api-design).
+- [Skema Persistensi Database PostgreSQL](../FRD/FRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md#6-persistence-and-ownership).
+- [Matriks Lengkap Kasus Ekstrem Fungsional](../FRD/FRD1%20-%20User%20Authentication,%20Sign%20In,%20and%20Password%20Recovery.md#102-matriks-kasus-ekstrem-fungsional-edge-cases-matrix).
