@@ -5,8 +5,8 @@
 | Item | Detail |
 | :--- | :--- |
 | **Document ID** | PRD2 |
-| **Feature ID** | PATH-L-01, PATH-L-02, PATH-L-03, PATH-L-04, PATH-L-05 |
-| **Feature Name** | Gamified Learning Path, Sentence Arrangement, Energy Engine, and Daily Streak |
+| **Feature ID** | PATH-L-01, PATH-L-02, PATH-L-03, PATH-L-04, PATH-L-05, PATH-L-06, PATH-L-07 |
+| **Feature Name** | Gamified Learning Path ("Path"), Language Isolation, Header Navigation, Bagian & Unit Structure, Vocabulary Lesson, Sentence Arrangement, Energy Engine, and Daily Streak |
 | **Application** | Dhou (تطبيق ضوء) — Mobile Web (PWA) & iOS Native Wrapper (CapacitorJS) |
 | **Module** | Gamified Learning Path & Progression Core |
 | **Sprint** | Sprint 2 |
@@ -15,7 +15,7 @@
 | **Status** | Approved |
 | **Implementation Status** | Planned |
 | **Version** | 1.0 |
-| **Last Updated** | 2026-11-02 |
+| **Last Updated** | 2026-11-06 |
 | **Product Owner** | Fariz Mirza Abdillah |
 | **Dependencies** | PRD1 (User Authentication), Design System (Figma Dhou), Research Reference Mapping (4-Pillar Cycle) |
 
@@ -27,9 +27,12 @@ Dhou adalah platform pembelajaran bahasa Arab adaptif (*Fusha* dan *'Ammiyyah*).
 
 Ketiadaan modul *Gamified Learning Path* pada fase ini menimbulkan hambatan kritis:
 1. **Disorientasi Alur Belajar & Penurunan Retensi D1–D7**: Pembelajar bahasa Arab mandiri mudah kehilangan arah tanpa peta kurikulum bertahap (*Path Tree*). Ketiadaan struktur jelas memicu kebingungan dan tingginya angka pengguna yang meninggalkan aplikasi (*drop-off*).
-2. **Kelemahan Kuis Konvensional dalam Melatih Sintaksis Arab**: Pembelajaran susunan kalimat (*nahwu* dan pola frasa percakapan) tidak efektif jika hanya diuji dengan pilihan ganda pasif. Dibutuhkan latihan kinestetik berbasis susun kata (*Sentence Arrangement*) yang mendukung ortografi Arab (arah baca kanan-ke-kiri/RTL, harakat lengkap, dan huruf sambung) disertai kata pengecoh (*distractors*) yang menguji ketelitian.
-3. **Fluktuasi Motivasi Harian Pembelajar**: Konsistensi harian adalah kunci kefasihan bahasa. Tanpa indikator komitmen harian yang tegas seperti **Api Streak (🔥)** dengan aturan yang jelas (minimal 1 sesi tuntas per hari kalender), motivasi belajar pengguna cepat meredup.
-4. **Dilema Monetisasi Energi vs Akselerasi Adopsi Pengguna MVP**:
+2. **Percampuran Jalur Antar Bahasa**: Tanpa isolasi path per bahasa, kemajuan belajar pengguna dari satu bahasa dapat bersinggungan atau tercampur dengan jalur bahasa lain. Hal ini menciptakan kebingungan kurikulum dan data progres yang tidak akurat.
+3. **Ketiadaan Hierarki Konten yang Jelas (Bagian & Unit)**: Tanpa struktur *Bagian* (kumpulan Unit tematik) dan *Unit* (kumpulan Lesson + Exercise), pengguna tidak memiliki gambaran kedalaman dan urutan materi. Konten terasa datar dan tidak ada rasa pencapaian bertingkat.
+4. **Kelemahan Kuis Konvensional dalam Melatih Sintaksis Arab**: Pembelajaran susunan kalimat (*nahwu* dan pola frasa percakapan) tidak efektif jika hanya diuji dengan pilihan ganda pasif. Dibutuhkan latihan kinestetik berbasis susun kata (*Sentence Arrangement*) yang mendukung ortografi Arab (arah baca kanan-ke-kiri/RTL, harakat lengkap, dan huruf sambung) disertai kata pengecoh (*distractors*) yang menguji ketelitian.
+5. **Tidak Ada Jembatan Kosa Kata Sebelum Latihan**: Pengguna langsung dihadapkan pada soal susun kata tanpa terlebih dahulu mengenal kosa kata baru. Hal ini meningkatkan frustrasi dan menurunkan performa sesi pertama. Dibutuhkan *Vocabulary Introduction Lesson* di awal setiap Unit.
+6. **Fluktuasi Motivasi Harian Pembelajar**: Konsistensi harian adalah kunci kefasihan bahasa. Tanpa indikator komitmen harian yang tegas seperti **Api Streak (🔥)** dengan aturan yang jelas (minimal 1 sesi tuntas per hari kalender), motivasi belajar pengguna cepat meredup.
+7. **Dilema Monetisasi Energi vs Akselerasi Adopsi Pengguna MVP**:
    - Sistem kuota energi (*Energy/Lives*) adalah standar industri penting untuk monetisasi langganan berbayar (*Unlimited Energy*).
    - Namun, membatasi energi pengguna Free Plan (misal: memblokir belajar setelah 5 kali salah) di awal peluncuran MVP akan merusak pengalaman belajar dan menghambat pengujian kurikulum.
    - Diperlukan arsitektur sistem energi yang dirancang matang untuk kebutuhan komersial masa depan, namun memiliki kebijakan khusus MVP yang memberikan **Unlimited Energy bagi pengguna Free Plan** tanpa perlu merombak skema basis data di masa mendatang.
@@ -48,26 +51,42 @@ Ketiadaan modul *Gamified Learning Path* pada fase ini menimbulkan hambatan krit
 
 ## 3. Purpose
 
-Menyediakan modul **Gamified Learning Path** pada aplikasi Dhou yang memfasilitasi visualisasi peta navigasi materi (*Unit & Lesson Nodes*), sesi latihan interaktif penyusunan kalimat berbahasa Arab (*Sentence Arrangement*) sebanyak 10 butir soal dengan 2 kata pengecoh, mekanisme pengulangan soal salah di akhir sesi (*Error Re-queue*), mesin penghitung api streak harian (*Daily Streak Engine*), serta infrastruktur energi cerdas (*Energy Engine*) dengan kebijakan promosi *unlimited energy* di fase MVP.
+Menyediakan modul **Path** (nama menu resmi di navigasi bawah) pada aplikasi Dhou yang memfasilitasi:
+- Visualisasi peta navigasi materi dengan hierarki **Bagian → Unit → Lesson Nodes** per bahasa yang terisolasi (Fusha / 'Ammiyyah, dsb. tidak pernah tercampur).
+- Header Path dengan **dropdown pemilihan bahasa** di kiri dan indikator **Streak 🔥, Energi ⚡, dan XP** di kanan.
+- **Vocabulary Introduction Lesson** di tiap awal Unit sebagai jembatan kosa kata sebelum sesi latihan.
+- **Exercise** di tiap akhir Unit sebagai ujian komprehensif unit tersebut.
+- Sesi latihan interaktif penyusunan kalimat berbahasa Arab (*Sentence Arrangement*) sebanyak 10 butir soal dengan 2 kata pengecoh.
+- Mekanisme pengulangan soal salah di akhir sesi (*Error Re-queue*), mesin penghitung api streak harian (*Daily Streak Engine*), serta infrastruktur energi cerdas (*Energy Engine*) dengan kebijakan promosi *unlimited energy* di fase MVP.
 
 ---
 
 ## 4. Objectives
 
-1. Mengimplementasikan peta belajar interaktif (**Visual Learning Path Tree**) dengan hierarki *Unit $\rightarrow$ Lesson Nodes* yang memiliki 3 status visual jelas: *Terkunci (Locked)*, *Aktif (Active / Current)*, dan *Selesai (Completed)*.
-2. Membangun 1 varian latihan kuis utama untuk MVP: **Susun Kata Arab (*Sentence Arrangement*)** dengan parameter:
+1. Menetapkan nama menu resmi tab belajar sebagai **"Path"** di bilah navigasi bawah aplikasi Dhou.
+2. Mengimplementasikan **Isolasi Jalur Belajar per Bahasa**: setiap bahasa (Fusha / 'Ammiyyah Mesir / 'Ammiyyah Syam / dll.) memiliki path, progres, dan data node yang terpisah secara independen. Data antara bahasa yang berbeda tidak pernah bercampur.
+3. Membangun **Header Path** dengan tata letak:
+   - **Kiri**: Dropdown pemilih bahasa aktif (menampilkan nama bahasa saat ini; saat diklik membuka daftar pilihan bahasa yang tersedia).
+   - **Kanan**: Tiga indikator pill: Api Streak (🔥 + angka), Energi (⚡ ∞ / angka), dan XP (⭐ + total poin).
+4. Mendefinisikan dan mengimplementasikan hierarki konten **Bagian → Unit → Lesson/Exercise**:
+   - **Bagian** (*Section*): Kelompok tematik besar yang menghimpun beberapa Unit. Contoh: "Bagian 1: Dasar-Dasar Percakapan".
+   - **Unit**: Kumpulan Lesson yang berfokus pada satu tema spesifik. Setiap Unit terdiri dari **minimal 3 Lesson + 1 Exercise** di akhir Unit.
+   - **Exercise**: Sesi latihan penutup tiap Unit, berisi 10 soal yang menggabungkan kosa kata dari seluruh Lesson dalam Unit tersebut.
+5. Mengimplementasikan **Vocabulary Introduction Lesson**: Node pertama di setiap Unit wajib berupa lesson pengenalan kosa kata baru, bukan langsung soal susun kata.
+6. Mengimplementasikan peta belajar interaktif (**Visual Learning Path Tree**) dengan hierarki *Bagian $\rightarrow$ Unit $\rightarrow$ Lesson Nodes* yang memiliki 3 status visual jelas: *Terkunci (Locked)*, *Aktif (Active / Current)*, dan *Selesai (Completed)*.
+7. Membangun 1 varian latihan kuis utama untuk MVP: **Susun Kata Arab (*Sentence Arrangement*)** dengan parameter:
    - Tepat **10 butir soal** per sesi lesson.
    - Tepat **2 kata pengecoh (*distractors*)** pada setiap soal di baki kata acak (*Word Bank Tray*).
    - Dukungan ortografi Arab RTL (`dir="rtl"`), font Amiri/Noto Sans Arabic dengan harakat lengkap, serta tombol pemutar audio pengucapan.
-3. Menerapkan mekanisme **Error Re-queuing (Mastery Loop)**: Soal yang salah dijawab otomatis dipindahkan ke urutan paling belakang sesi kuis dan wajib diselesaikan dengan benar sebelum sesi dinyatakan tuntas.
-4. Mengembangkan mesin kalkulasi **Daily Streak (🔥)** otomatis berbasis zona waktu lokal pengguna (`user_timezone`):
+8. Menerapkan mekanisme **Error Re-queuing (Mastery Loop)**: Soal yang salah dijawab otomatis dipindahkan ke urutan paling belakang sesi kuis dan wajib diselesaikan dengan benar sebelum sesi dinyatakan tuntas.
+9. Mengembangkan mesin kalkulasi **Daily Streak (🔥)** otomatis berbasis zona waktu lokal pengguna (`user_timezone`):
    - Minimal menyelesaikan 1 sesi lesson penuh (10 butir soal tuntas) dalam 1 hari kalender lokal (00:00:00 – 23:59:59) untuk menyalakan/mempertahankan api streak.
    - Menampilkan status visual api membara (aktif), redup/abu-abu (berisiko putus), dan padam/reset ke 0 jika terlewat 1 hari penuh.
-5. Merancang arsitektur **Energy Engine (🔋)**:
-   - Skema model data siap langganan: Free Plan (5 kuota harian) vs Premium Plan (Unlimited $\infty$).
-   - Kebijakan Promo MVP: Free Plan mendapatkan status *Unlimited Energy Promo* (jawaban salah tidak memotong energi dan tidak memblokir sesi belajar).
-   - Indikator UI di Top Bar menampilkan status baterai dengan simbol tak hingga (`⚡ ∞`).
-6. Menampilkan layar rangkuman penyelesaian sesi (**Lesson Summary Modal**) dengan perolehan XP (+10 XP untuk sesi baru, +5 XP untuk latihan ulang), persentase akurasi percobaan pertama, animasi perayaan api streak, dan pembukaan kunci node berikutnya di Path.
+10. Merancang arsitektur **Energy Engine (🔋)**:
+    - Skema model data siap langganan: Free Plan (5 kuota harian) vs Premium Plan (Unlimited $\infty$).
+    - Kebijakan Promo MVP: Free Plan mendapatkan status *Unlimited Energy Promo* (jawaban salah tidak memotong energi dan tidak memblokir sesi belajar).
+    - Indikator UI di Header menampilkan status energi dengan simbol tak hingga (`⚡ ∞`).
+11. Menampilkan layar rangkuman penyelesaian sesi (**Lesson Summary Modal**) dengan perolehan XP (+10 XP untuk sesi baru, +5 XP untuk latihan ulang), persentase akurasi percobaan pertama, animasi perayaan api streak, dan pembukaan kunci node berikutnya di Path.
 
 ---
 
@@ -75,13 +94,50 @@ Menyediakan modul **Gamified Learning Path** pada aplikasi Dhou yang memfasilita
 
 ### In Scope
 
+- **Nama Menu Tab Belajar: "Path"**
+  - Nama label pada bilah navigasi bawah (Bottom Navigation Bar) untuk tab modul pembelajaran adalah **"Path"** — bukan "Belajar", "Learn", atau label lainnya.
+
+- **Isolasi Jalur Belajar per Bahasa (PATH-L-00)**
+  - Setiap bahasa yang didukung Dhou (Fusha / 'Ammiyyah Mesir / 'Ammiyyah Syam / dll.) memiliki data Path, struktur Bagian/Unit, Lesson Node, dan rekam progres pengguna yang **terpisah sepenuhnya**.
+  - Pengguna hanya dapat melihat dan mengerjakan Path dari satu bahasa dalam satu tampilan (bahasa yang dipilih via dropdown header).
+  - Backend tidak pernah mencampur entri progres lintas bahasa dalam satu query atau tampilan.
+
+- **Header Path (PATH-L-H)**
+  - Tata letak header di halaman Path (rata dua sisi):
+    - **Rata Kiri**: Komponen Dropdown Pemilih Bahasa — menampilkan nama bahasa aktif (contoh: *"Fusha (الفصحى)"*) beserta ikon bendera/ikon bahasa. Saat diketuk, membuka bottom sheet daftar bahasa yang tersedia.
+    - **Rata Kanan**: Tiga pill indikator berurutan:
+      1. 🔥 Api Streak + angka hari berturut-turut.
+      2. ⚡ Energi + angka atau simbol `∞` (MVP).
+      3. ⭐ XP + total poin akumulasi pengguna.
+  - Header ini persisten (sticky) di bagian atas halaman Path saat pengguna scroll.
+
+- **Hierarki Konten: Bagian → Unit → Lesson/Exercise (PATH-L-STR)**
+
+  **Definisi Bagian (Section):**
+  > Bagian adalah kelompok tematik besar yang menghimpun beberapa Unit yang saling berkaitan secara topik. Setiap Bagian ditandai dengan banner pembatas (*section divider*) di halaman Path. Contoh: *"Bagian 1: Dasar-Dasar Percakapan"*.
+
+  **Definisi Unit:**
+  > Unit adalah kumpulan Lesson yang berfokus pada satu tema spesifik dalam Bagian induknya. Contoh: *"Unit 1: Perkenalan & Sapaan Sehari-hari"* di dalam Bagian 1. Setiap Unit memiliki banner Unit di atas jalur node-nya (menampilkan nomor unit, judul, dan indikator progres unit).
+
+  **Aturan Komposisi Unit:**
+  - Setiap Unit terdiri dari **minimal 3 Lesson + 1 Exercise** di akhir Unit.
+  - Urutan node dalam Unit: `[Vocab Lesson] → [Lesson 2] → [Lesson 3] → … → [Exercise]`
+  - Node pertama Unit wajib berupa **Vocabulary Introduction Lesson** (lihat PATH-L-07).
+  - Node terakhir Unit wajib berupa **Exercise** (sesi latihan komprehensif unit tersebut).
+  - Lesson di antara node pertama dan terakhir adalah lesson latihan susun kata biasa.
+
+  **Definisi Exercise:**
+  > Exercise adalah sesi latihan penutup tiap Unit. Berisi **10 soal** yang menggabungkan kosa kata dari seluruh Lesson dalam Unit tersebut. Exercise menggunakan mekanisme kuis yang sama dengan Lesson (Sentence Arrangement + Error Re-queue). Menyelesaikan Exercise memberikan **+15 XP** (lebih tinggi dari Lesson biasa). Exercise hanya terbuka setelah seluruh Lesson dalam Unit selesai.
+
 - **Peta Jalur Belajar / Visual Path (PATH-L-01)**
-  - Banner Unit: Nomor Unit, Judul Pembelajaran (misal: *Unit 1: Perkenalan & Sapaan Sehari-hari*), dialek target, dan indikator progres.
+  - Banner Bagian: Pemisah visual antar Bagian di scroll path. Judul Bagian ditampilkan tebal.
+  - Banner Unit: Nomor Unit, Judul Pembelajaran (misal: *Unit 1: Perkenalan & Sapaan Sehari-hari*), dialek target, dan indikator progres unit.
   - Jalur Node Berkelok (Zig-zag Path):
     - *Locked Node*: Berwarna abu-abu, ikon gembok, memicu getaran dan pesan peringatan saat disentuh.
     - *Active Node (Current)*: Berwarna Warm Orange (`#FF8904`), animasi denyut (*pulse glow*), tooltip melayang "Mulai!".
     - *Completed Node*: Berwarna Dialect Blue (`#51A2FF`) dengan ikon centang putih, dapat diakses kembali untuk latihan ulang.
-  - Header navigasi atas (*Top Navigation Bar*): Menampilkan indikator Api Streak (🔥), Indikator Energi (⚡ $\infty$), dan Akumulasi Poin XP.
+    - *Exercise Node*: Badge berlabel "Exercise" di atas ikon node untuk membedakannya dari Lesson biasa.
+    - *Vocab Node*: Badge berlabel "Kosa Kata" di atas ikon node pertama tiap Unit.
   - Fitur *Auto-scroll Viewport*: Otomatis memusatkan layar ke node aktif saat halaman dimuat.
 - **Sesi Latihan Susun Kata / Sentence Arrangement (PATH-L-02)**
   - Header kuis: Tombol keluar (X) dengan konfirmasi batal, Progress Bar persentase penyelesaian 10 soal, dan badge energi tak terbatas.
@@ -156,18 +212,29 @@ Menyediakan modul **Gamified Learning Path** pada aplikasi Dhou yang memfasilita
 
 ## 7. User Flow & Navigation Diagram
 
-Berikut adalah alur perjalanan pengguna dari peta jalur belajar (*Visual Path*), pengerjaan 10 soal susun kata, penanganan antrean soal salah, hingga aktivasi Api Streak dan pembukaan kunci node berikutnya:
+Berikut adalah alur perjalanan pengguna dari pemilihan bahasa di header **Path**, melalui Vocabulary Lesson, pengerjaan 10 soal susun kata, penanganan antrean soal salah, hingga aktivasi Api Streak dan pembukaan kunci node berikutnya:
 
 ```mermaid
 flowchart TD
-    Start([Pengguna Membuka Tab Belajar]) --> ViewPath[Lihat Peta Belajar / Visual Path]
-    ViewPath --> CheckTopBar[Cek Top Bar: Streak 🔥, Energi ⚡ ∞, XP ⭐]
-    ViewPath --> ClickNode{Pilih Node Pembelajaran}
+    Start(["Pengguna Membuka Tab 'Path'"]) --> ViewPath["Lihat Peta Belajar / Visual Path\n(Sesuai Bahasa yang Dipilih)"]
+    ViewPath --> CheckHeader["Header Path:\nKiri: Dropdown Bahasa | Kanan: Streak 🔥 · Energi ⚡ · XP ⭐"]
+    ViewPath --> SwitchLang{"Ganti Bahasa?"}
+    SwitchLang -- Ya --> SelectLang["Pilih Bahasa dari Dropdown\n(Path berganti ke bahasa terpilih)"]
+    SelectLang --> ViewPath
+    SwitchLang -- Tidak --> ClickNode{"Pilih Node Pembelajaran"}
     
     ClickNode -- Node Terkunci (Locked) --> ShakeLock[Animasi Goyang Gembok & Toast: Selesaikan node sebelumnya!]
     ShakeLock --> ViewPath
     
-    ClickNode -- Node Aktif / Selesai --> StartSession[Mulai Sesi Belajar: 10 Soal Susun Kata]
+    ClickNode -- Node Terkunci (Locked) --> ShakeLock[Animasi Goyang Gembok & Toast: Selesaikan node sebelumnya!]
+    ShakeLock --> ViewPath
+    
+    ClickNode -- Node Vocab/Kosa Kata --> StartVocab["Mulai Vocabulary Introduction Lesson\n(Lihat kartu kosa kata baru)"]
+    StartVocab --> VocabDone["Selesai Melihat Kosa Kata\n(Node Vocab = Completed)"]
+    VocabDone --> UnlockNext2[Buka Kunci Node Lesson Berikutnya]
+    UnlockNext2 --> ViewPath
+    
+    ClickNode -- Node Lesson Aktif / Selesai --> StartSession[Mulai Sesi Belajar: 10 Soal Susun Kata]
     
     subgraph QuizQueue ["Siklus Antrean 10 Soal Susun Kata (Sentence Arrangement)"]
         StartSession --> InitQueue[Inisialisasi Antrean: Q1 sampai Q10]
@@ -176,13 +243,13 @@ flowchart TD
         LoadUI --> TapWordTile[Pengguna Mengetuk Balok Kata di Baki]
         TapWordTile --> MoveToDropZone[Balok Pindah ke Area Jawaban RTL]
         MoveToDropZone --> CheckAnswerBox{Apakah Masih Ingin Mengatur Kata?}
-        CheckAnswerBox -- Koreksi / Batalkan Kata --> TapDropTile[Ketuk Balok di Area Jawaban -> Kembali ke Baki]
+        CheckAnswerBox -- Koreksi / Batalkan Kata --> TapDropTile["Ketuk Balok di Area Jawaban -> Kembali ke Baki"]
         TapDropTile --> TapWordTile
-        CheckAnswerBox -- Yakin --> ClickCheck[Klik Tombol 'Periksa']
+        CheckAnswerBox -- Yakin --> ClickCheck["Klik Tombol 'Periksa'"]
         
         ClickCheck --> ValidateOrder{Apakah Susunan Kata Benar?}
         
-        ValidateOrder -- BENAR --> SuccessSheet[Bottom Sheet Hijau: 'Luar Biasa!' + Audio Chime]
+        ValidateOrder -- BENAR --> SuccessSheet["Bottom Sheet Hijau: 'Luar Biasa!' + Audio Chime"]
         SuccessSheet --> CheckRemaining{Apakah Antrean Masih Ada Soal?}
         
         ValidateOrder -- SALAH --> ErrorSheet[Bottom Sheet Merah: Kunci Jawaban + Transliterasi + Audio Buzz]
@@ -197,20 +264,22 @@ flowchart TD
     CheckRemaining -- Antrean Kosong (10 Soal Berhasil Dikuasai) --> SummaryModal[Tampilkan Layar Rangkuman Sesi]
     
     subgraph ProgressionEngine ["Mesin Streak & Progresi"]
-        SummaryModal --> CalculateXP{Apakah Lesson Baru?}
-        CalculateXP -- Ya --> AwardNewXP[Berikan +10 XP]
+        SummaryModal --> CalculateXP{"Jenis Sesi?"}
+        CalculateXP -- Lesson Baru --> AwardNewXP[Berikan +10 XP]
+        CalculateXP -- Exercise Unit --> AwardExerciseXP[Berikan +15 XP]
         CalculateXP -- Latihan Ulang --> AwardReviewXP[Berikan +5 XP]
-        AwardNewXP --> CalculateStreak{Lesson Pertama Hari Ini?}
+        AwardNewXP --> CalculateStreak{"Lesson Pertama Hari Ini?"}
+        AwardExerciseXP --> CalculateStreak
         AwardReviewXP --> CalculateStreak
         
-        CalculateStreak -- Ya (Pertama Kali Hari Ini) --> IgniteStreak[Streak +1 & Animasi Api Membara 🔥]
-        CalculateStreak -- Sudah Pernah Hari Ini --> MaintainStreak[Pertahankan Api Streak Tetap Menyala 🔥]
+        CalculateStreak -- Ya (Pertama Kali Hari Ini) --> IgniteStreak["Streak +1 & Animasi Api Membara 🔥"]
+        CalculateStreak -- Sudah Pernah Hari Ini --> MaintainStreak["Pertahankan Api Streak Tetap Menyala 🔥"]
         
         IgniteStreak --> UnlockNextNode[Buka Kunci Node Berikutnya di Path]
         MaintainStreak --> UnlockNextNode
     end
     
-    UnlockNextNode --> ClickContinue[Klik 'Lanjutkan ke Path']
+    UnlockNextNode --> ClickContinue["Klik 'Lanjutkan ke Path'"]
     ClickContinue --> ViewPath
 ```
 
@@ -229,13 +298,14 @@ flowchart TD
 | **Description** | Sebagai pembelajar bahasa Arab, saya ingin melihat peta jalur belajar (*Learning Path Tree*) dengan visualisasi node berkelok dan status yang jelas (Selesai, Aktif, Terkunci) per unit agar saya memahami posisi dan arah kemajuan belajar saya. |
 
 #### User Journey
-1. Pengguna membuka tab "Belajar" (*Learn*) pada bilah navigasi bawah (*Bottom Navigation Bar*).
-2. Sistem menampilkan Unit Banner di bagian atas: Nomor Unit, Judul Pembelajaran (misal: *Unit 1: Perkenalan & Sapaan Sehari-hari*), dialek target (*Fusha*), dan persentase progres unit.
-3. Di bawah banner, jalur belajar membentang secara vertikal dengan pola zig-zag bergantian (kiri - tengah - kanan - tengah - kiri).
-4. Pengguna melihat node aktif saat ini memiliki efek lingkaran berdenyut (*subtle pulse glow*) berwarna Warm Orange (`#FF8904`) dengan tooltip melayang bertuliskan "Mulai!".
-5. Node-node sebelum node aktif ditandai lingkaran biru/hijau dengan ikon centang putih menandakan telah selesai (*Completed*).
-6. Node-node setelah node aktif berwarna abu-abu redup dengan ikon gembok terkunci (*Locked*).
-7. Pengguna mengetuk node aktif untuk memulai sesi belajar 10 soal.
+1. Pengguna mengetuk tab **"Path"** pada bilah navigasi bawah (*Bottom Navigation Bar*).
+2. Header Path tampil dengan **dropdown pemilih bahasa** di sisi kiri (menampilkan bahasa aktif, misal: *"Fusha (الفصحى)"*) dan tiga pill **Streak 🔥, Energi ⚡, XP ⭐** di sisi kanan.
+3. Di bawah header, Path menampilkan konten berurutan: Banner Bagian (misal: *"Bagian 1: Dasar-Dasar Percakapan"*), lalu Banner Unit (misal: *"Unit 1: Perkenalan & Sapaan Sehari-hari"*), diikuti jalur zig-zag node.
+4. Node pertama Unit ditandai badge **"Kosa Kata"** (Vocabulary Lesson), node terakhir Unit ditandai badge **"Exercise"**.
+5. Pengguna melihat node aktif saat ini memiliki efek lingkaran berdenyut (*subtle pulse glow*) berwarna Warm Orange (`#FF8904`) dengan tooltip melayang bertuliskan "Mulai!".
+6. Node-node sebelum node aktif ditandai lingkaran biru/hijau dengan ikon centang putih menandakan telah selesai (*Completed*).
+7. Node-node setelah node aktif berwarna abu-abu redup dengan ikon gembok terkunci (*Locked*).
+8. Pengguna mengetuk node aktif untuk memulai sesi belajar.
 
 #### Acceptance Criteria
 - **AC-PATH-01-A (Visual Layout):** Sistem wajib merender tata letak pohon kurikulum berurutan dari atas ke bawah dengan posisi horizontal zig-zag yang proporsional pada resolusi mobile (360px–430px).
@@ -244,16 +314,36 @@ flowchart TD
   - `CURRENT`: Lingkaran warna Warm Orange (`#FF8904`), beranimasi denyut (*pulsing halo*), tooltip "Mulai!", dapat diklik untuk memulai sesi baru (+10 XP).
   - `LOCKED`: Lingkaran abu-abu `#D1D5DB`, ikon gembok `#9CA3AF`, tidak dapat diklik untuk memulai sesi baru.
 - **AC-PATH-01-C (Locked Click Feedback):** Jika pengguna mengetuk node berstatus `LOCKED`, sistem wajib memunculkan animasi goyang (*shake animation*) pada gembok disertai pesan toast: *"Selesaikan pelajaran sebelumnya terlebih dahulu untuk membuka kunci materi ini."*
-- **AC-PATH-01-D (Auto-scroll to Active):** Posisi scroll viewport halaman Path wajib otomatis memusatkan tampilan (*auto-scroll into view*) ke node berstatus `CURRENT` saat halaman pertama kali dimuat.
+- **AC-PATH-01-A (Menu Name):** Nama label tab di bilah navigasi bawah wajib menampilkan teks **"Path"**.
+- **AC-PATH-01-B (Header Layout):** Header halaman Path wajib menampilkan:
+  - Sisi kiri: Dropdown pemilih bahasa aktif dengan nama dan ikon bahasa yang terpilih.
+  - Sisi kanan: Tiga pill berurutan (kiri ke kanan): Streak 🔥 + angka, Energi ⚡ + nilai/`∞`, XP ⭐ + total.
+  - Header sticky: tetap terlihat saat pengguna scroll ke bawah.
+- **AC-PATH-01-C (Language Isolation):** Saat pengguna mengganti bahasa di dropdown:
+  - Halaman Path wajib me-render ulang struktur Bagian/Unit/Node sesuai bahasa yang dipilih.
+  - Data progres yang ditampilkan harus milik path bahasa tersebut, bukan bahasa lain.
+- **AC-PATH-01-D (Section & Unit Banners):** Sistem wajib merender banner Bagian (*Section divider*) dan banner Unit secara terpisah di halaman Path. Banner Bagian muncul sebelum Unit pertama dari Bagian tersebut.
+- **AC-PATH-01-E (Visual Layout):** Sistem wajib merender tata letak pohon kurikulum berurutan dari atas ke bawah dengan posisi horizontal zig-zag yang proporsional pada resolusi mobile (360px–430px).
+- **AC-PATH-01-F (Node States):** Setiap node wajib mencerminkan satu dari tiga status valid:
+  - `COMPLETED`: Lingkaran penuh warna Dialect Blue (`#51A2FF`), ikon centang putih, dapat diklik untuk sesi latihan ulang (+5 XP).
+  - `CURRENT`: Lingkaran warna Warm Orange (`#FF8904`), beranimasi denyut (*pulsing halo*), tooltip "Mulai!", dapat diklik untuk memulai sesi baru.
+  - `LOCKED`: Lingkaran abu-abu `#D1D5DB`, ikon gembok `#9CA3AF`, tidak dapat diklik untuk memulai sesi baru.
+- **AC-PATH-01-G (Node Type Badges):** Node pertama tiap Unit wajib memiliki badge "Kosa Kata" (Vocabulary Lesson). Node terakhir tiap Unit wajib memiliki badge "Exercise". Badge ini tampil di atas lingkaran node.
+- **AC-PATH-01-H (Locked Click Feedback):** Jika pengguna mengetuk node berstatus `LOCKED`, sistem wajib memunculkan animasi goyang (*shake animation*) pada gembok disertai pesan toast: *"Selesaikan pelajaran sebelumnya terlebih dahulu untuk membuka kunci materi ini."*
+- **AC-PATH-01-I (Auto-scroll to Active):** Posisi scroll viewport halaman Path wajib otomatis memusatkan tampilan (*auto-scroll into view*) ke node berstatus `CURRENT` saat halaman pertama kali dimuat.
 
 #### UI Specification Table
 
 | UI Component | Spec / Token | Visual State | Interaction Behavior |
 | :--- | :--- | :--- | :--- |
-| **Unit Banner Card** | Bg: `#FF8904`, Radius: `16px`, Padding: `16px`, Text: Fredoka Bold | Standar | Sticky di atas saat scroll melewati unit, memuat judul unit dan dialek target |
+| **Path Header** | Height: `56px`, Bg: `#FFFFFF` atau surface token, Border bottom: `1px solid #F3F4F6`, Sticky | Sticky saat scroll | Kiri: Dropdown bahasa; Kanan: Pill Streak, Energi, XP |
+| **Language Dropdown** | Pill kiri, Bg: `#FFF7ED`, Border: `#FFEDD5`, Radius: `9999px`, Text: Fredoka Medium `14px`, Ikon: Bendera/bahasa | Aktif / Terpilih | Mengetuk membuka bottom sheet daftar bahasa; pergantian bahasa memuat ulang Path |
+| **Section Divider Banner** | Full-width, Bg: `#F9FAFB`, Border top/bottom `1px solid #E5E7EB`, Text: Fredoka SemiBold `13px` UPPERCASE, Color: `#6B7280` | Standar | Pemisah visual antar Bagian di scroll path |
+| **Unit Banner Card** | Bg: `#FF8904`, Radius: `16px`, Padding: `16px`, Text: Fredoka Bold | Standar | Sticky saat scroll melewati unit, memuat judul unit, dialek target, dan indikator progres unit |
 | **Active Node Button** | Diameter: `68px`, Bg: `#FF8904`, Border bottom: `4px solid #D67000` (3D Button Dhou), Radius: `9999px` | Current (Pulsing) | Animasi *scale 0.96* saat disentuh, membuka modal dialog pra-sesi kuis |
 | **Completed Node** | Diameter: `60px`, Bg: `#51A2FF`, Border bottom: `4px solid #2B7CD4`, Ikon: Checkmark putih | Completed | Membuka modal konfirmasi latihan ulang (+5 XP) |
 | **Locked Node** | Diameter: `60px`, Bg: `#E5E7EB`, Border bottom: `4px solid #D1D5DB`, Ikon: Gembok abu-abu | Disabled / Locked | Animasi getar (*shake 0.3s*) + haptic error saat disentuh |
+| **Node Type Badge** | Pill di atas node, Bg: `#FEF3C7` (Vocab) / `#EFF6FF` (Exercise), Font: `10px`, Radius: `9999px` | Standar | Informatif, tidak interaktif |
 | **Path Connectors** | Garis lengkung SVG / dashed line, tebal `6px`, warna: `#FED7AA` (aktif) atau `#E5E7EB` (terkunci) | Background | Menghubungkan titik tengah antar-lingkaran node secara berkesinambungan |
 
 ---
@@ -472,22 +562,187 @@ flowchart TD
 
 ---
 
+### US-PATH-07: Pengenalan Kosa Kata Baru (Vocabulary Introduction Lesson)
+
+| Attribute | Specification |
+| :--- | :--- |
+| **User Story ID** | US-PATH-07 |
+| **Feature ID** | PATH-L-07 |
+| **Title** | Vocabulary Introduction Lesson — Kosa Kata Baru Sebelum Latihan |
+| **Priority** | Critical (P0) |
+| **Description** | Sebagai pembelajar bahasa Arab, saya ingin melihat dan mempelajari kosa kata baru di awal setiap Unit sebelum mengerjakan soal latihan, agar saya tidak dihadapkan langsung pada soal yang mengandung kata-kata yang belum pernah saya lihat sebelumnya. |
+
+#### User Journey
+1. Pengguna mengetuk node pertama di sebuah Unit baru. Node tersebut ditandai badge **"Kosa Kata"**.
+2. Layar Vocabulary Lesson terbuka — berbeda tampilannya dari layar kuis susun kata.
+3. Sistem menampilkan **kartu kosa kata** satu per satu (swiping horizontal atau tap untuk lanjut):
+   - Kata Arab berharakat lengkap (font Amiri Bold, ukuran besar).
+   - Transliterasi latin di bawah kata Arab.
+   - Arti dalam bahasa Indonesia.
+   - Contoh penggunaan dalam kalimat singkat.
+   - Tombol audio 🔊 untuk mendengarkan pengucapan penutur asli.
+4. Pengguna menavigasi seluruh kartu kosa kata (tidak ada mekanisme "benar/salah" di sini — hanya pengenalan).
+5. Setelah kartu terakhir, sistem menampilkan layar ringkasan kosa kata: daftar seluruh kata baru yang baru saja dipelajari.
+6. Pengguna mengetuk tombol **"Mulai Latihan!"** untuk melanjutkan.
+7. Node Vocabulary Lesson berubah status `COMPLETED`, dan node Lesson berikutnya di Unit tersebut terbuka kuncinya.
+
+#### Acceptance Criteria
+- **AC-PATH-07-A (Node Position):** Node Vocabulary Introduction Lesson wajib menjadi node **pertama** di setiap Unit. Tidak boleh ada node Lesson atau Exercise yang mendahului Vocab Lesson dalam satu Unit.
+- **AC-PATH-07-B (Minimum Vocabulary Count):** Setiap Vocabulary Lesson wajib memuat minimal **5 kosa kata baru** (dan maksimal 15) yang akan digunakan dalam Lesson-lesson berikutnya di Unit tersebut.
+- **AC-PATH-07-C (Card Content Completeness):** Setiap kartu kosa kata wajib memuat: kata Arab berharakat, transliterasi latin, arti bahasa Indonesia, dan audio pengucapan. Kartu tanpa audio tidak boleh ditampilkan ke pengguna.
+- **AC-PATH-07-D (No Scoring):** Vocabulary Lesson tidak memiliki mekanisme penilaian benar/salah. Tidak ada soal, tidak ada skor, dan tidak ada Error Re-queue. Pengguna cukup membaca dan mendengarkan seluruh kartu.
+- **AC-PATH-07-E (Completion Trigger):** Vocabulary Lesson dinyatakan `COMPLETED` saat pengguna mengetuk tombol "Mulai Latihan!" setelah melihat kartu terakhir. Node Lesson berikutnya langsung terbuka kuncinya.
+- **AC-PATH-07-F (XP Award):** Menyelesaikan Vocabulary Lesson memberikan **+5 XP** (lebih rendah dari Lesson biasa karena tidak ada latihan aktif).
+- **AC-PATH-07-G (Streak Eligibility):** Menyelesaikan Vocabulary Lesson saja **tidak** memenuhi syarat aktivasi/perpanjangan streak harian. Streak hanya menyala dari penyelesaian Lesson (10 soal tuntas) atau Exercise.
+- **AC-PATH-07-H (Reviewable):** Vocabulary Lesson yang sudah `COMPLETED` dapat dibuka kembali kapan saja untuk direview tanpa memotong energi dan tanpa perubahan streak.
+
+#### UI Specification Table
+
+| UI Component | Spec / Token | Visual State | Interaction Behavior |
+| :--- | :--- | :--- | :--- |
+| **Vocab Lesson Header** | Tombol X (keluar), Progress dot indicator (jumlah kartu), Badge "Kosa Kata" oranye | Standar | X membuka dialog konfirmasi keluar |
+| **Vocabulary Card** | Radius: `24px`, Bg: `#FFFBEB`, Shadow: Dhou card shadow, Padding: `24px`, Min-height: `280px` | Satu kartu per layar | Swipe kanan/kiri atau tap tombol anak panah untuk navigasi antar kartu |
+| **Arabic Word Display** | Font: Amiri Bold, Size: `48px`, Color: `#1F2937`, RTL `dir="rtl"`, Line-height: `1.8` | Centered | Hanya display, tidak interaktif |
+| **Transliteration Text** | Font: Fredoka Regular, Size: `18px`, Color: `#6B7280` | Di bawah kata Arab | Hanya display |
+| **Meaning Text** | Font: Fredoka SemiBold, Size: `20px`, Color: `#111827` | Di bawah transliterasi | Hanya display |
+| **Example Sentence** | Italic, Size: `14px`, Color: `#4B5563`, Bg: `#F3F4F6`, Radius: `8px`, Padding: `8px 12px` | Di bawah arti | Hanya display, contoh kalimat singkat |
+| **Audio Button** | Circular, Diameter: `48px`, Bg: `#FF8904`, Ikon speaker putih | Normal / Playing | Memutar audio pengucapan penutur asli |
+| **Vocab Summary Screen** | Daftar seluruh kata baru dalam tabel kecil (Arab + Arti), Tombol "Mulai Latihan!" di bawah | Standar | Tombol "Mulai Latihan!" menutup Vocab Lesson dan membuka kunci node berikutnya |
+
+---
+
+### US-PATH-08: Header Path & Isolasi Jalur Belajar per Bahasa
+
+| Attribute | Specification |
+| :--- | :--- |
+| **User Story ID** | US-PATH-08 |
+| **Feature ID** | PATH-L-H, PATH-L-00 |
+| **Title** | Path Header with Language Switcher & Per-Language Path Isolation |
+| **Priority** | Critical (P0) |
+| **Description** | Sebagai pengguna Dhou yang mempelajari lebih dari satu ragam bahasa Arab, saya ingin dapat memilih bahasa yang ingin saya pelajari via dropdown di header halaman Path, dan jalur belajar yang ditampilkan harus sepenuhnya terpisah per bahasa — sehingga progres Fusha saya tidak tercampur dengan 'Ammiyyah, dan sebaliknya. |
+
+#### User Journey
+1. Pengguna membuka tab **"Path"** di navigasi bawah. Header muncul dengan bahasa yang terakhir dipilih (atau bahasa default: *Fusha*).
+2. Di sisi kiri header, Dropdown Bahasa menampilkan nama bahasa aktif: *"Fusha (الفصحى)"*.
+3. Di sisi kanan header, tiga pill berurutan tampil: 🔥 `4` (streak hari ini), ⚡ `∞` (energi MVP), ⭐ `1.250` (total XP).
+4. Pengguna mengetuk dropdown bahasa. Bottom sheet daftar bahasa terbuka, menampilkan bahasa-bahasa yang tersedia: Fusha, 'Ammiyyah Mesir, 'Ammiyyah Syam, dsb. (bahasa yang belum tersedia dinonaktifkan/greyed out dengan label "Segera Hadir").
+5. Pengguna memilih *"'Ammiyyah Mesir (مصري)"*.
+6. Bottom sheet tertutup. Header diperbarui: Dropdown kini menampilkan "'Ammiyyah Mesir". Path di bawahnya me-render ulang struktur Bagian/Unit/Node khusus untuk 'Ammiyyah Mesir, dengan data progres yang berbeda dari Fusha.
+7. Pengguna scroll ke bawah. Header tetap terlihat (sticky).
+
+#### Acceptance Criteria
+- **AC-PATH-08-A (Tab Name):** Label tab di bilah navigasi bawah wajib terbaca **"Path"**.
+- **AC-PATH-08-B (Header Persistence):** Header wajib sticky — tetap terlihat di bagian atas saat pengguna melakukan scroll ke bawah halaman Path.
+- **AC-PATH-08-C (Dropdown Content):** Bottom sheet daftar bahasa wajib memuat seluruh bahasa yang didukung Dhou. Bahasa belum tersedia ditampilkan dengan state `disabled` dan label "Segera Hadir".
+- **AC-PATH-08-D (Language Switch Effect):** Saat pengguna memilih bahasa berbeda, halaman Path wajib:
+  1. Mengambil data Path dari bahasa baru via API (`GET /api/v1/paths?language=:langCode`).
+  2. Me-render ulang seluruh struktur Bagian/Unit/Node sesuai bahasa baru.
+  3. Menampilkan progres pengguna yang spesifik untuk bahasa baru tersebut.
+- **AC-PATH-08-E (Data Isolation):** Backend wajib menyimpan progres node per kombinasi `(user_id, language_code)`. Query progres tidak boleh menggabungkan data lintas `language_code` yang berbeda.
+- **AC-PATH-08-F (Header Right Pills):** Tiga pill di sisi kanan header wajib selalu menampilkan: Streak aktual hari ini, Energi aktual (atau `∞` di MVP), dan Total XP akumulatif pengguna.
+
+#### UI Specification Table
+
+| UI Component | Spec / Token | Visual State | Interaction Behavior |
+| :--- | :--- | :--- | :--- |
+| **Path Header Container** | Height: `56px`, Bg: Surface/White, Shadow bottom `0 1px 0 #F3F4F6`, Sticky z-index: `50` | Sticky saat scroll | Container flex row: justify-between, align-center |
+| **Language Dropdown Trigger** | Pill, Bg: `#FFF7ED`, Border: `1px solid #FFEDD5`, Padding: `8px 12px`, Radius: `9999px`, Max-width: `160px` | Default / Focused | Teks nama bahasa aktif + chevron down; tap membuka Language Bottom Sheet |
+| **Language Bottom Sheet** | Modal bottom sheet, max-height: `60vh`, Radius top: `24px`, Bg: White | Pop-up dari bawah | Daftar bahasa dalam list; item disabled greyed out + label badge "Segera Hadir" |
+| **Streak Pill** | Bg: `#FFF7ED`, Border: `#FFEDD5`, Radius: `9999px`, Padding: `6px 10px` | Active (Orange) / Inactive (Gray) | Ikon 🔥 + angka streak; tap membuka modal streak |
+| **Energy Pill** | Bg: `#F0FDF4`, Border: `#BBF7D0`, Radius: `9999px`, Padding: `6px 10px` | Unlimited (∞) / Normal | Ikon ⚡ + angka atau `∞`; tap membuka modal info energi |
+| **XP Pill** | Bg: `#FFFBEB`, Border: `#FDE68A`, Radius: `9999px`, Padding: `6px 10px` | Standar | Ikon ⭐ + total XP; tap membuka modal riwayat XP |
+
+---
+
+### US-PATH-09: Struktur Hierarki Konten — Bagian, Unit & Exercise
+
+| Attribute | Specification |
+| :--- | :--- |
+| **User Story ID** | US-PATH-09 |
+| **Feature ID** | PATH-L-STR |
+| **Title** | Content Hierarchy: Section (Bagian), Unit, and Unit Exercise |
+| **Priority** | Critical (P0) |
+| **Description** | Sebagai pembelajar, saya ingin memahami struktur kurikulum secara jelas — tahu saya sedang di Bagian berapa, Unit berapa, dan berapa pelajaran yang sudah/sisa — serta mengerjakan Exercise di akhir setiap Unit sebagai ujian komprehensif unit tersebut. |
+
+#### Definisi & Aturan Hierarki
+
+**Bagian (Section)**
+- Bagian adalah kelompok tematik tingkat tertinggi yang merangkum beberapa Unit berkaitan.
+- Setiap Bagian diberi nomor berurutan: *Bagian 1, Bagian 2, …*
+- Setiap Bagian wajib memiliki minimal 2 Unit dan tidak ada batas maksimum.
+- Bagian ditampilkan sebagai *section divider banner* di halaman Path, memisahkan Unit-unit secara visual.
+
+**Unit**
+- Unit adalah kumpulan Lesson yang berfokus pada satu tema spesifik.
+- Setiap Unit wajib mengikuti struktur: `[Vocab Lesson] → [Lesson 2] → … → [Lesson N] → [Exercise]`
+- Jumlah Lesson per Unit: **minimal 3 Lesson** (termasuk Vocab Lesson), **ditambah 1 Exercise** di akhir.
+- Urutan node wajib sekuensial — tidak ada node yang bisa dikerjakan sebelum node sebelumnya `COMPLETED`.
+- Banner Unit ditampilkan di atas jalur node Unit tersebut dengan judul, nomor, dan progress bar Unit.
+
+**Exercise**
+- Exercise adalah node terakhir di setiap Unit — ujian komprehensif berbasis semua kosa kata Unit.
+- Mekanisme: 10 soal Sentence Arrangement dengan kata-kata yang diambil dari seluruh Lesson dalam Unit.
+- Exercise hanya terbuka (`CURRENT`) setelah seluruh Lesson dalam Unit tersebut `COMPLETED`.
+- Reward: **+15 XP** (lebih tinggi dari Lesson biasa +10 XP).
+- Exercise yang sudah selesai dapat diulangi untuk review (+5 XP, sama seperti review Lesson biasa).
+
+#### User Journey
+1. Pengguna membuka halaman Path. Di bagian atas konten (di bawah header), mereka melihat banner Bagian: *"BAGIAN 1: DASAR-DASAR PERCAKAPAN"*.
+2. Di bawahnya, banner Unit: *"Unit 1 · Perkenalan & Sapaan Sehari-hari — 4/5 Pelajaran Selesai"*.
+3. Jalur zig-zag menampilkan 5 node: Node 1 (badge "Kosa Kata", ✅ Completed), Node 2–4 (✅ Completed), Node 5 (badge "Exercise", 🟠 Active/Current).
+4. Pengguna mengetuk Exercise node. Layar Exercise terbuka dengan instruksi: *"Ujian Unit 1 — Gunakan kosa kata yang kamu pelajari!"*.
+5. Exercise berjalan seperti Lesson biasa: 10 soal Sentence Arrangement dengan Error Re-queue.
+6. Setelah Exercise selesai, layar Summary menampilkan: **+15 XP**, akurasi, dan animasi "Unit Selesai! 🎉".
+7. Halaman Path kembali. Unit 1 seluruhnya berstatus Completed. Banner Unit 2 muncul dengan node pertamanya (Vocab Lesson) berstatus Current.
+
+#### Acceptance Criteria
+- **AC-PATH-09-A (Section Structure):** Setiap Bagian wajib memiliki minimal 2 Unit. Backend wajib menyediakan field `section_id` dan `section_title` pada setiap Unit.
+- **AC-PATH-09-B (Unit Composition):** Setiap Unit wajib memiliki minimal 3 Lesson + 1 Exercise. Jika unit hanya memiliki <3 Lesson (di luar Exercise), sistem tidak boleh mempublish Unit tersebut ke pengguna.
+- **AC-PATH-09-C (Exercise Node Position):** Exercise node wajib selalu menjadi node **terakhir** dalam Unit. Node Exercise tidak dapat diletakkan di tengah Unit.
+- **AC-PATH-09-D (Exercise Prerequisite):** Exercise node hanya berstatus `CURRENT` (terbuka) setelah seluruh Lesson node dalam Unit yang sama berstatus `COMPLETED`.
+- **AC-PATH-09-E (Exercise XP):** Menyelesaikan Exercise untuk pertama kali memberikan **+15 XP**. Mengulang Exercise yang sudah selesai memberikan **+5 XP**.
+- **AC-PATH-09-F (Unit Progress Indicator):** Banner Unit wajib menampilkan indikator progres unit dalam format: *"X/N Pelajaran Selesai"* yang diperbarui real-time setelah setiap node diselesaikan.
+- **AC-PATH-09-G (Section Divider):** Banner Bagian wajib tampil di halaman Path sebagai pemisah visual di atas Unit pertama dari setiap Bagian.
+
+#### UI Specification Table
+
+| UI Component | Spec / Token | Visual State | Interaction Behavior |
+| :--- | :--- | :--- | :--- |
+| **Section Divider Banner** | Full-width, Bg: `#F9FAFB`, Padding: `10px 16px`, Border top/bottom: `1px solid #E5E7EB`, Text: Fredoka SemiBold `12px` UPPERCASE, Color: `#6B7280` | Standar | Non-interaktif; memisahkan Bagian secara visual |
+| **Unit Banner Card** | Bg: Warm Orange `#FF8904`, Radius: `16px`, Padding: `16px 20px`, Margin: `12px 16px` | Sticky unit saat scroll melewatinya | Judul Unit, dialek, progress `X/N Pelajaran` |
+| **Unit Progress Bar** | Di dalam Banner Unit, Height: `6px`, Bg track: `rgba(255,255,255,0.4)`, Fill: `#FFFFFF`, Radius: `9999px` | Dynamic | Proporsional terhadap lesson yang diselesaikan |
+| **Exercise Node** | Diameter: `68px` (sedikit lebih besar), Bg: `#A855F7` (ungu), Border bottom: `4px solid #7E22CE`, Ikon: Bintang/piala | Current (Pulsing) / Completed (Centang) | Badge "Exercise" di atas node; membuka sesi Exercise 10 soal |
+| **Exercise Summary Badge** | Di Lesson Summary Modal, Bg: `#F3E8FF`, Text: Fredoka Bold `+15 XP`, Radius: `12px` | Standar | Menampilkan reward Exercise yang lebih tinggi dari Lesson biasa |
+
+---
+
 ## 9. Business Rules Summary Matrix
 
 | Rule ID | Domain | Aturan Bisnis | Konsekuensi Pelanggaran / Sistem |
 | :--- | :--- | :--- | :--- |
-| **RL-EX-01** | Struktur Soal | Setiap 1 sesi lesson berisi tepat 10 butir soal susun kata. | Sesi kuis tidak dapat dimulai jika materi pada node memiliki $<10$ butir soal. |
+| **RL-MN-01** | Nama Menu | Tab modul pembelajaran di navigasi bawah wajib bernama **"Path"**. | Label selain "Path" dianggap inkonsistensi produk dan harus dikoreksi sebelum rilis. |
+| **RL-LG-01** | Isolasi Bahasa | Setiap bahasa memiliki data Path, Bagian, Unit, Lesson, dan rekam progres yang terpisah penuh. Data lintas bahasa tidak pernah tercampur dalam satu tampilan atau query. | Backend dilarang menggabungkan `user_node_progress` dari `language_code` berbeda dalam satu response API. |
+| **RL-LG-02** | Switching Bahasa | Mengganti bahasa di dropdown header memuat ulang Path sesuai bahasa baru. Progres bahasa lama tidak terdampak dan tersimpan. | Tidak ada data progres yang dihapus atau di-reset saat pengguna berpindah bahasa. |
+| **RL-HD-01** | Header Path | Header halaman Path wajib menampilkan: sisi kiri = dropdown bahasa aktif, sisi kanan = Streak 🔥 + Energi ⚡ + XP ⭐. Header bersifat sticky. | Header yang tidak memuat dropdown bahasa atau pill indikator dianggap belum memenuhi spesifikasi. |
+| **RL-STR-01** | Komposisi Unit | Setiap Unit wajib terdiri dari minimal 3 Lesson (termasuk Vocab Lesson) + 1 Exercise di akhir. | Unit dengan <3 Lesson atau tanpa Exercise tidak boleh dipublish ke pengguna. |
+| **RL-STR-02** | Urutan Node Unit | Urutan wajib: Node pertama = Vocab Lesson, Node terakhir = Exercise, Lesson latihan di antaranya. Urutan ini tidak bisa diubah. | Node Exercise tidak dapat diletakkan selain di posisi terakhir Unit. |
+| **RL-STR-03** | Komposisi Bagian | Setiap Bagian wajib memiliki minimal 2 Unit. | Bagian dengan 1 Unit tidak boleh dipublish. |
+| **RL-VC-01** | Vocab Lesson — Posisi | Node Vocabulary Introduction Lesson wajib menjadi node pertama di setiap Unit. | Tidak ada Lesson atau Exercise yang mendahului Vocab Lesson dalam satu Unit. |
+| **RL-VC-02** | Vocab Lesson — Konten | Setiap Vocab Lesson wajib memuat 5–15 kosa kata baru, masing-masing dilengkapi audio penutur asli. | Kartu kosa kata tanpa audio tidak boleh ditampilkan ke pengguna. |
+| **RL-VC-03** | Vocab Lesson — Streak | Menyelesaikan Vocab Lesson saja tidak memenuhi syarat aktivasi/perpanjangan streak harian. | Streak hanya dihitung dari penyelesaian Lesson (10 soal tuntas) atau Exercise. |
+| **RL-EX-01** | Struktur Soal | Setiap 1 sesi Lesson/Exercise berisi tepat 10 butir soal susun kata. | Sesi tidak dapat dimulai jika materi pada node memiliki $<10$ butir soal. |
 | **RL-EX-02** | Varian Pembelajaran | 1 varian tunggal untuk MVP: Susun Kata Arab (*Sentence Arrangement*). | Tidak ada varian kuis lain yang dirender di engine kuis MVP. |
 | **RL-EX-03** | Kata Pengecoh | Setiap soal wajib menyertakan tepat 2 kata pengecoh (*distractors*) di baki kata acak. | Sistem memvalidasi ketersediaan 2 distractor pada payload API soal. |
+| **RL-EX-04** | Exercise — Prerequisite | Exercise node hanya terbuka setelah seluruh Lesson dalam Unit yang sama `COMPLETED`. | Exercise yang belum terbuka kuncinya berstatus `LOCKED` dan tidak dapat dimulai. |
+| **RL-EX-05** | Exercise — XP | Exercise baru = +15 XP. Latihan ulang Exercise = +5 XP. Vocab Lesson = +5 XP. Lesson baru = +10 XP. | Pemberian XP yang salah jenis merupakan bug produksi yang harus diprioritaskan. |
 | **RL-EQ-01** | Re-queue Soal Salah | Soal yang salah dijawab dipindahkan ke urutan paling belakang antrean sesi kuis. | Soal tidak digugurkan; pengguna wajib mengulanginya di akhir sesi hingga benar. |
-| **RL-EQ-02** | Syarat Kelulusan Sesi | Sesi lesson hanya selesai jika seluruh 10 soal berhasil dijawab benar (antrean soal $0$). | Pengguna tidak dapat mencapai layar rangkuman sebelum semua soal terkuasai. |
+| **RL-EQ-02** | Syarat Kelulusan Sesi | Sesi Lesson/Exercise hanya selesai jika seluruh 10 soal berhasil dijawab benar (antrean soal $0$). | Pengguna tidak dapat mencapai layar rangkuman sebelum semua soal terkuasai. |
 | **RL-EN-01** | Kebijakan Energi MVP | Selama fase promosi MVP, seluruh pengguna Free Plan berstatus *Unlimited Energy*. | Kesalahan menjawab soal tidak mengurangi energi (`energy_deduction = 0`); sistem tidak pernah memblokir pengguna karena kehabisan baterai. |
 | **RL-EN-02** | Arsitektur Energi Masa Depan | Free Plan pasca-MVP dibatasi 5 energi. Salah memotong 1 energi. Refill 1 per 4 jam. Pelanggan Premium berstatus Unlimited Energy. | Skema DDL dan API dipersiapkan sejak awal agar transisi paywall kelak tidak membutuhkan migrasi DB. |
-| **RL-ST-01** | Syarat Api Streak | Api streak menyala jika pengguna menyelesaikan minimal 1 sesi lesson penuh (10 soal tuntas) dalam 1 hari kalender lokal pengguna (00:00:00 - 23:59:59). | Membuka aplikasi tanpa menyelesaikan lesson tidak memperpanjang streak. Ketiadaan aktivitas selama 1 hari penuh mereset streak ke 0. |
+| **RL-ST-01** | Syarat Api Streak | Api streak menyala jika pengguna menyelesaikan minimal 1 sesi Lesson (10 soal tuntas) atau Exercise dalam 1 hari kalender lokal pengguna (00:00:00–23:59:59). | Membuka aplikasi atau hanya menyelesaikan Vocab Lesson tidak memperpanjang streak. Ketiadaan aktivitas selama 1 hari penuh mereset streak ke 0. |
 | **RL-ST-02** | Satu Streak per Hari | Counter streak hanya berinkremen maksimal +1 per hari kalender lokal. | Penyelesaian lesson ke-2, ke-3, dst pada hari yang sama hanya menambah akumulasi XP, bukan menambah nilai streak ganda. |
 | **RL-PR-01** | Buka Kunci Node | Node $N+1$ hanya terbuka jika Node $N$ berstatus `COMPLETED`. | Node berstatus `LOCKED` diblokir dari klik; memunculkan animasi shake dan tooltip peringatan. |
-| **RL-PR-02** | Alokasi XP | Lesson baru = +10 XP. Pengulangan lesson selesai (*review*) = +5 XP. | Mencegah eksploitasi perolehan XP instan tanpa mempelajari materi baru. |
-| **RL-PR-03** | Pembatalan Sesi | Keluar di tengah pengerjaan (sebelum 10 soal tuntas) membatalkan seluruh progres sesi. | Streak tidak menyala, XP tidak diberikan, dan posisi antrean direset. |
+| **RL-PR-02** | Pembatalan Sesi | Keluar di tengah pengerjaan (sebelum 10 soal tuntas) membatalkan seluruh progres sesi. | Streak tidak menyala, XP tidak diberikan, dan posisi antrean direset. |
 
 ---
 
@@ -498,18 +753,24 @@ flowchart TD
 | **D1 & D7 Retention Rate** | Persentase pengguna yang kembali belajar pada hari ke-1 dan ke-7 pasca-registrasi. | D1 $\ge 45\%$, D7 $\ge 25\%$ | Mixpanel / Supabase Analytics event `session_start` |
 | **Daily Streak Adherence** | Persentase pengguna aktif harian (DAU) yang berhasil mempertahankan api streak $\ge 3$ hari berturut-turut. | $\ge 35\%$ dari total DAU | Query `current_streak >= 3` di basis data profil pengguna |
 | **Lesson Completion Rate** | Rasio sesi 10 soal susun kata yang berhasil diselesaikan hingga layar summary dibanding total sesi yang dimulai. | $\ge 80\%$ | Event `lesson_completed` dibagi `lesson_started` |
+| **Vocab Lesson Engagement** | Rata-rata jumlah kartu kosa kata yang dilihat pengguna per Vocab Lesson (dari total kartu yang tersedia). | $\ge 90\%$ kartu dilihat | Event `vocab_card_viewed` dibagi total kartu per session |
+| **Exercise Completion Rate** | Rasio sesi Exercise yang berhasil diselesaikan dibanding total yang dimulai. | $\ge 75\%$ | Event `exercise_completed` dibagi `exercise_started` |
 | **Error Re-queue Resolution**| Tingkat keberhasilan pengguna menuntaskan soal yang sempat salah dijawab pada putaran kedua di akhir sesi. | $\ge 90\%$ | Log penyelesaian antrean error kuis pada tabel sesi |
 | **Average Lesson Duration** | Rata-rata durasi waktu yang dihabiskan pengguna untuk menyelesaikan 1 sesi lesson (10 butir soal). | 3.5 – 5.5 Menit | Selisih timestamp `completed_at - started_at` |
+| **Language Switch Rate** | Persentase pengguna aktif yang pernah mengganti bahasa di dropdown header minimal 1 kali. | Tracking only (no target MVP) | Event `language_switched` |
 
 ---
 
 ## 11. Implementation References & FRD2 Mapping
 
 Dokumen PRD2 ini menjadi acuan spesifikasi fungsional teknis (**FRD2**). Rencana kerja penyusunan FRD2 mencakup:
-1. **Traceability Matrix**: Pemetaan US-PATH-01 s/d US-PATH-06 ke FR-PATH-01 s/d FR-PATH-06.
-2. **Kontrak API Definitif**: Endpoint `/api/v1/lessons/:nodeId/start`, `/api/v1/lessons/:nodeId/submit`, dan `/api/v1/lessons/:nodeId/finish`.
-3. **Skema Basis Data PostgreSQL (DDL)**: Tabel `units`, `nodes`, `exercises`, `user_streaks`, `user_energy`, dan `user_lesson_progress`.
-4. **Validasi Skema Zod & Matriks 25+ Edge Cases**: Penanganan offline di tengah kuis, perpindahan timezone perangkat, dan tap balok kata berkecepatan tinggi (*rapid tapping*).
+1. **Traceability Matrix**: Pemetaan US-PATH-01 s/d US-PATH-09 ke FR-PATH-01 s/d FR-PATH-09.
+2. **Kontrak API Definitif**: Endpoint:
+   - `GET /api/v1/paths?language=:langCode` — mengambil struktur Path (Bagian/Unit/Node) per bahasa.
+   - `POST /api/v1/vocab-lessons/:nodeId/complete` — menandai Vocab Lesson selesai.
+   - `POST /api/v1/lessons/:nodeId/start`, `submit`, dan `finish` — sesi Lesson/Exercise.
+3. **Skema Basis Data PostgreSQL (DDL)**: Tabel `sections`, `units`, `nodes` (dengan kolom `node_type`: `vocab|lesson|exercise`), `vocab_words`, `exercises`, `user_streaks`, `user_energy`, dan `user_lesson_progress` (dengan kolom `language_code`).
+4. **Validasi Skema Zod & Matriks 25+ Edge Cases**: Penanganan offline di tengah kuis, perpindahan timezone perangkat, tap balok kata berkecepatan tinggi (*rapid tapping*), dan switching bahasa saat sesi sedang berjalan.
 
 Dokumen teknis selanjutnya akan disimpan pada:  
 [`Requirements/FRD/FRD2 - Gamified Learning Path, Sentence Arrangement, Energy, and Daily Streak.md`](file:///Users/farizmirza/Documents/Project/dhou-docs/Requirements/FRD/FRD2%20-%20Gamified%20Learning%20Path,%20Sentence%20Arrangement,%20Energy,%20and%20Daily%20Streak.md).
