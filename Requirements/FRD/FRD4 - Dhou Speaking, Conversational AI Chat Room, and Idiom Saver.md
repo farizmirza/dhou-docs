@@ -23,14 +23,14 @@
 
 ## 1. Purpose, Sources, and Authority
 
-Dokumen ini menerjemahkan seluruh kebutuhan bisnis, pengalaman pengguna, dan aturan kuota dari [PRD4 — Dhou Speaking: Conversational AI Chat Room, Dialect Inheritance, Speech Practice, and Saved Idioms/Conversations](../PRD/PRD4%20-%20Dhou%20Speaking,%20Conversational%20AI%20Chat%20Room,%20and%20Idiom%20Saver.md) menjadi spesifikasi teknis definitif, kontrak antarmuka API, skema basis data PostgreSQL, penegakan kuota penyimpanan (kuota 3 percakapan vs idiom tak terbatas), arsitektur audio STT/TTS, dan matriks pengujian bagi tim Frontend dan Backend.
+Dokumen ini menerjemahkan seluruh kebutuhan bisnis, pengalaman pengguna, dan aturan kuota dari [PRD4 — Dhou Speaking: Conversational AI Chat Room, Dialect Inheritance, Speech Practice, and Saved Idioms/Conversations](../PRD/PRD4%20-%20Dhou%20Speaking,%20Conversational%20AI%20Chat%20Room,%20and%20Idiom%20Saver.md) menjadi spesifikasi teknis definitif, kontrak antarmuka API, skema basis data PostgreSQL, penegakan kuota penyimpanan (kuota 3 percakapan vs kuota maksimal 20 idiom), arsitektur audio STT/TTS, tombol salin teks ke clipboard, dan matriks pengujian bagi tim Frontend dan Backend.
 
 PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman pedagogis. FRD4 ini memegang otoritas atas arsitektur teknis, kontrak JSON REST API, skema DDL, state machine sesi audio, dan kriteria penerimaan verifikasi kode (*code implementation verification*).
 
 | Sumber | Baseline yang Digunakan | Peruntukan Teknis |
 | :--- | :--- | :--- |
-| [PRD4](../PRD/PRD4%20-%20Dhou%20Speaking,%20Conversational%20AI%20Chat%20Room,%20and%20Idiom%20Saver.md) | Versi 1.0, Approved | US-SPK-01 s/d US-SPK-06, Aturan Bisnis RL-SPK-01..05 |
-| [design-system.md](../../design-system.md) | Versi 1.0, Approved | Token warna dialek, tipografi Amiri/Fredoka, tombol 3D Dhou |
+| [PRD4](../PRD/PRD4%20-%20Dhou%20Speaking,%20Conversational%20AI%20Chat%20Room,%20and%20Idiom%20Saver.md) | Versi 1.0, Approved | US-SPK-01 s/d US-SPK-06, Aturan Bisnis RL-SPK-01..06 |
+| [design-system.md](../../design-system.md) | Versi 1.0, Approved | Token warna dialek, tipografi Amiri/Fredoka, tombol 3D Dhou, aksen amber simpan |
 | [DESIGN_INSTRUCTIONS.md](../../DESIGN_INSTRUCTIONS.md) | Versi 1.0, Approved | Standar penamaan frame Figma `[US-SPK-xx]`, variasi edge cases |
 | [RESEARCH_REFERENCE_MAPPING.md](../../RESEARCH_REFERENCE_MAPPING.md) | Versi 1.0, Master Reference | Pilar 3: Communicative Production, Variety Consistency, Audio Feedback |
 
@@ -39,23 +39,23 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
 ## 2. Scope and Source Reconciliation
 
 ### 2.1 Rekonsiliasi Ruang Lingkup Teknis
-1. **Direct Chat Room Landing & Pewarisan Dialek (FR-SPK-01)**: Penanganan navigasi instan tanpa onboarding pop-up; resolusi dialek otomatis membaca state preferensi `user_preferences.last_active_dialect` dari modul *Path* (FRD2) dengan fallback ke `fusha`.
+1. **Direct Chat Room Landing, Global Stats Header & Pewarisan Dialek (FR-SPK-01)**: Penanganan navigasi instan tanpa onboarding pop-up; resolusi dialek otomatis membaca state preferensi `user_preferences.last_active_dialect` dari modul *Rute* (FRD2) dengan fallback ke `fusha`. Tata letak header menampilkan judul **"Dhou AI"** bersanding dengan **Dropdown Pemilih Dialek** di sudut kiri atas (`Dhou AI [Mesir 🇪🇬 ▾]`) yang seragam menggunakan Dropdown UI pada mobile & desktop, serta 3 pill stats pembelajaran (`[🔥 3] [⚡ ∞] [⭐ 150]`) bersanding dengan tombol bookmark (`🔖`) di sudut kanan atas.
 2. **Mesin Percakapan Lisan Dua Arah (FR-SPK-02)**: Pipeline transmisi suara via Web MediaRecorder API / Capacitor Voice Plugin $\rightarrow$ Whisper Speech-to-Text $\rightarrow$ LLM Context $\rightarrow$ Arabic Text-to-Speech Streaming $\rightarrow$ Chat Bubble Render.
-3. **Gelembung Chat Dwibahasa & Replay Audio (FR-SPK-03)**: Rendering pesan dua arah (AI & User) dengan ortografi Arab berharakat RTL (`dir="rtl"`), terjemahan bahasa Indonesia, dan kontrol pemutaran audio independen (🔊).
-4. **Mesin Simpan Idiom Tak Terbatas (FR-SPK-04)**: Penyimpanan idiom/frasa dari gelembung pesan ke tabel `saved_idioms` tanpa batasan kuota (*unlimited*), disertai deduplikasi *upsert*.
+3. **Gelembung Chat Dwibahasa, Replay Audio & Salin Teks (FR-SPK-03)**: Rendering pesan dua arah (AI & User) dengan ortografi Arab berharakat RTL (`dir="rtl"`), terjemahan bahasa Indonesia, kontrol pemutaran audio independen (🔊), dan tombol salin (📋 Salin) ke clipboard dengan feedback visual *"Tersalin!"* serta notifikasi toast.
+4. **Mesin Simpan Idiom Kuota Maksimal 20 (FR-SPK-04)**: Tombol simpan selalu tersedia di setiap pesan AI (termasuk salam *Fusha*). Transisi status tombol menjadi *"Tersimpan ✓"* berwarna kuning/amber khas Dhou. Penyimpanan dibatasi kuota ketat `COUNT(saved_idioms) <= 20`; mutasi ke-21 ditolak dengan toast error `⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)`. Kuota `⭐ {jumlah}/20` ditampilkan di header tab kamus ungkapan, banner, dan panel kanan desktop.
 5. **Penegakan Kuota Maksimal 3 Percakapan (FR-SPK-05)**: Transaksi basis data atomik untuk mengarsipkan sesi percakapan utuh dengan penegakan kuota ketat `COUNT(saved_conversations) <= 3`. Menolak simpanan ke-4 dengan kode error `ERR_SAVED_CONVERSATIONS_FULL` dan memicu modal penimpaan (*replace modal*).
-6. **API Navigasi Arsip (FR-SPK-06)**: Endpoint pembacaan dan penghapusan daftar percakapan tersimpan (maks 3) dan daftar idiom tersimpan (paginated).
+6. **Layar Koleksi Terpadu Ber-Tab & Navigasi Bookmark (FR-SPK-06)**: Tombol ikon bookmark (`🔖`) di sudut kanan atas header (rata kanan) menjadi pintu masuk tunggal menuju halaman koleksi terpadu yang memuat dua tab: Tab 1 "Idiom Tersimpan" (kuota maks 20) dan Tab 2 "Percakapan Tersimpan" (kuota maks 3), beserta endpoint pembacaan dan penghapusan data arsip.
 
 ### 2.2 Traceability Matrix (PRD4 $\rightarrow$ FRD4)
 
 | PRD4 Source Trace | FRD ID | Operation ID | Frontend Integration Target | Test Scenario ID |
 | :--- | :--- | :--- | :--- | :--- |
-| US-SPK-01; AC-SPK-01-A..D; RL-SPK-01 | **FR-SPK-01** | `speaking_chat_init` | `SpeakingChatRoom`, `TopBarDialectBadge`, `DialectSwitcher` | T-SPK-01, 02 |
+| US-SPK-01; AC-SPK-01-A..E; RL-SPK-01 | **FR-SPK-01** | `speaking_chat_init` | `SpeakingChatRoom`, `TopBarTitleDialectDropdown`, `GlobalStatsHeader` | T-SPK-01, 02, 15 |
 | US-SPK-02; AC-SPK-02-A..D; | **FR-SPK-02** | `speaking_send_voice` | `MainMicButton`, `AudioVisualizerWave`, `AudioPipelineManager` | T-SPK-03, 04, 05 |
-| US-SPK-03; AC-SPK-03-A..C; RL-SPK-04 | **FR-SPK-03** | `speaking_replay_audio` | `ChatBubbleAI`, `ChatBubbleUser`, `SpeakerReplayBtn` | T-SPK-06, 07 |
-| US-SPK-04; AC-SPK-04-A..C; RL-SPK-03..05 | **FR-SPK-04** | `speaking_save_idiom` | `SaveIdiomBtn`, `SavedIdiomsDrawer`, `IdiomCard` | T-SPK-08, 09 |
+| US-SPK-03; AC-SPK-03-A..D; RL-SPK-04, 06 | **FR-SPK-03** | `speaking_replay_audio`, `speaking_copy_text` | `ChatBubbleAI`, `ChatBubbleUser`, `SpeakerReplayBtn`, `CopyArabicBtn`, `FeedbackToast` | T-SPK-06, 07, 16 |
+| US-SPK-04; AC-SPK-04-A..F; RL-SPK-03..06 | **FR-SPK-04** | `speaking_save_idiom` | `SaveIdiomBtn`, `SavedIdiomsTab`, `IdiomCard`, `IdiomQuotaBadge` | T-SPK-08, 09 |
 | US-SPK-05; AC-SPK-05-A..C; RL-SPK-02 | **FR-SPK-05** | `speaking_save_conversation`| `SaveConversationAction`, `QuotaLimitModal`, `ReplaceDrawer` | T-SPK-10, 11, 12 |
-| US-SPK-06; AC-SPK-06-A..C; | **FR-SPK-06** | `speaking_list_saved` | `SavedConversationsView`, `SavedIdiomsView`, `ReadOnlyChat` | T-SPK-13, 14, 15 |
+| US-SPK-06; AC-SPK-06-A..D; RL-SPK-01, 06 | **FR-SPK-06** | `speaking_list_saved` | `TopBarBookmarkBtn`, `SavedCollectionsPage`, `SavedIdiomsTab`, `SavedConversationsTab`, `ReadOnlyChat` | T-SPK-13, 14, 15 |
 
 ---
 
@@ -70,10 +70,12 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
 
 ## 4. Functional Requirements
 
-### 4.1 FR-SPK-01 — Resolusi Dialek & Inisialisasi Chat Room
+### 4.1 FR-SPK-01 — Resolusi Dialek, Header Navigation & Inisialisasi Chat Room
 - **FR-SPK-01.1**: Mengetuk menu Dhou AI memanggil `POST /api/v1/speaking/chat/init`. Sistem memeriksa kolom `last_active_dialect` pada tabel `user_preferences`.
 - **FR-SPK-01.2**: Jika `last_active_dialect` bernilai `null` (pengguna baru), sistem menetapkan nilai default `fusha`.
 - **FR-SPK-01.3**: Respons inisialisasi mengembalikan objek sesi aktif: `session_id`, `dialect`, dan salam pembuka awal dari AI (`initial_greeting`) beserta URL audio TTS-nya.
+- **FR-SPK-01.4**: Pada tata letak header (baik Mobile maupun Desktop), komponen judul "Dhou AI" bersanding langsung dengan Dropdown Pemilih Dialek (`Dhou AI [Mesir 🇪🇬 ▾]`) di sudut kiri atas (**rata kiri**). Format pemilihan dialek wajib berwujud komponen Dropdown UI yang seragam di desktop dan mobile.
+- **FR-SPK-01.5**: Di sudut kanan atas header (**rata kanan**), sistem wajib merender 3 pill stats pembelajaran global: Api Streak (`🔥 {streak}`), Energi (`⚡ {energy}`), dan XP (`⭐ {xp}`), bersanding dengan ikon tombol bookmark (`🔖`) menuju halaman koleksi terpadu.
 
 ### 4.2 FR-SPK-02 — Pipeline Suara Interaktif (Voice-to-Chat)
 - **FR-SPK-02.1**: Mengetuk tombol mikrofon utama mengaktifkan perekaman audio via `navigator.mediaDevices.getUserMedia({ audio: true })` atau Capacitor Voice Recorder.
@@ -93,15 +95,22 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
   ```
 - **FR-SPK-02.5**: Respons teks Arab dari LLM otomatis dikonversi menjadi audio tuturan via TTS Engine dan disimpan ke bucket storage Supabase `speaking-audio/`.
 
-### 4.3 FR-SPK-03 — Rendering Gelembung Chat & Pemutaran Ulang Audio
+### 4.3 FR-SPK-03 — Rendering Gelembung Chat, Pemutaran Ulang Audio & Salin Teks
 - **FR-SPK-03.1**: Setiap pesan dirender dengan orientasi RTL untuk teks Arab (`font-family: 'Amiri', serif`, `font-size: 18px`, `line-height: 1.8`).
 - **FR-SPK-03.2**: Teks terjemahan bahasa Indonesia dirender di bawah teks Arab dengan warna `#4A5565` dan ukuran `14px`.
 - **FR-SPK-03.3**: Mengetuk ikon speaker (🔊) memutar audio dari `audio_url` pesan tersebut. Audio player client mengelola *single audio instance*: memulai audio baru otomatis menghentikan audio yang sedang berjalan sebelumnya.
+- **FR-SPK-03.4**: Tombol Salin (📋 Salin) dipasang pada setiap gelembung pesan (AI & User). Mengetuk tombol mengeksekusi `navigator.clipboard.writeText(arabic_text)`, mengubah teks tombol menjadi *"Tersalin!"* (warna emerald `#059669`) selama 2000ms, dan memicu notifikasi toast: *"Teks Arab berhasil disalin ke clipboard"*.
 
-### 4.4 FR-SPK-04 — Penyimpanan Idiom Tak Terbatas (*Unlimited Saved Idioms*)
-- **FR-SPK-04.1**: Endpoint `POST /api/v1/speaking/chat/save-idiom` menerima `message_id`, `arabic_phrase`, `translation_id`, dan `dialect`.
-- **FR-SPK-04.2**: Sistem melakukan operasi `UPSERT` pada tabel `saved_idioms` menggunakan constraint unik `(user_id, arabic_phrase)`.
-- **FR-SPK-04.3**: Tidak ada batasan kuota (*unlimited quota*) pada tabel `saved_idioms`.
+### 4.4 FR-SPK-04 — Penyimpanan Idiom Kuota Maksimal 20 (*Max 20 Saved Idioms*)
+- **FR-SPK-04.1**: Tombol simpan (🔖 Simpan) wajib muncul pada **setiap gelembung pesan AI** (termasuk salam pembuka awal *Fusha*), bukan hanya pesan dengan penanda idiom khusus.
+- **FR-SPK-04.2**: Endpoint `POST /api/v1/speaking/chat/save-idiom` menerima `message_id`, `arabic_phrase`, `translation_id`, dan `dialect`.
+- **FR-SPK-04.3**: Sistem memeriksa jumlah idiom tersimpan pengguna saat ini:
+  ```sql
+  SELECT COUNT(*) FROM public.saved_idioms WHERE user_id = $1;
+  ```
+- **FR-SPK-04.4**: Jika jumlah baris telah mencapai $\ge 20$, API mengembalikan error `409 Conflict` dengan kode `ERR_SAVED_IDIOMS_FULL` dan memicu toast frontend: *"⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)"*.
+- **FR-SPK-04.5**: Jika kuota masih tersedia ($< 20$), sistem melakukan operasi `UPSERT` pada tabel `saved_idioms` menggunakan constraint unik `(user_id, arabic_phrase)`. Tombol pada UI seketika berganti status menjadi *"Tersimpan ✓"* berlatar kuning/amber khas Dhou (`#FF8904` / `#FFF7ED` / border `#D67000`).
+- **FR-SPK-04.6**: Status kuota `⭐ {jumlah}/20` ditampilkan secara reaktif di header tab kamus ungkapan, banner pemberitahuan, serta panel koleksi desktop kanan.
 
 ### 4.5 FR-SPK-05 — Manajemen Kuota Maksimal 3 Percakapan Tersimpan
 - **FR-SPK-05.1**: Endpoint `POST /api/v1/speaking/chat/save-conversation/:sessionId` mengecek kuota pengguna:
@@ -111,9 +120,13 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
 - **FR-SPK-05.2**: Jika jumlah baris saat ini $\ge 3$, API mengembalikan respons error `409 Conflict` dengan kode `ERR_SAVED_CONVERSATIONS_FULL` disertai daftar 3 percakapan tersimpan saat ini.
 - **FR-SPK-05.3**: Pengguna dapat memanggil `DELETE /api/v1/speaking/chat/save-conversation/:savedId` untuk menghapus percakapan lama, atau menyertakan parameter `replace_saved_id` pada payload `POST` untuk melakukan penggantian atomik dalam 1 transaksi DB.
 
-### 4.6 FR-SPK-06 — Pengambilan Arsip Koleksi
-- **FR-SPK-06.1**: Endpoint `GET /api/v1/speaking/saved-conversations` mengembalikan maksimal 3 rekaman percakapan beserta ringkasan metadata (tanggal simpan, dialek, cuplikan dialog, durasi).
-- **FR-SPK-06.2**: Endpoint `GET /api/v1/speaking/saved-idioms` mengembalikan daftar idiom berpaginasi (default: 20 item per halaman) dengan dukungan filter dialek.
+### 4.6 FR-SPK-06 — Layar Koleksi Terpadu Ber-Tab & Navigasi Bookmark
+- **FR-SPK-06.1**: Pada bilah header chat room (Mobile & Desktop), tombol ikon bookmark (`TopBarBookmarkBtn`, icon `🔖`) diposisikan di sudut kanan atas (**rata kanan**).
+- **FR-SPK-06.2**: Mengetuk tombol bookmark me-render **Halaman Koleksi Terpadu (`SavedCollectionsPage`)** yang menyatukan seluruh materi tersimpan ke dalam 2 tab navigasi:
+  - **Tab 1: Idiom Tersimpan**: Mengonsumsi `GET /api/v1/speaking/saved-idioms`, merender kartu-kartu idiom dengan pemutar suara (🔊), tombol salin teks (📋 Salin), badge dialek, dan tombol hapus (*un-save*). Label tab menampilkan badge kuota `⭐ {jumlah}/20`.
+  - **Tab 2: Percakapan Tersimpan**: Mengonsumsi `GET /api/v1/speaking/saved-conversations`, merender hingga 3 kartu sesi dialog dengan label kuota `📁 {jumlah}/3`, serta kemampuan memutar ulang riwayat percakapan dalam mode *Read-Only*.
+- **FR-SPK-06.3**: Endpoint `GET /api/v1/speaking/saved-conversations` mengembalikan maksimal 3 rekaman percakapan beserta ringkasan metadata (tanggal simpan, dialek, cuplikan dialog, durasi, total pesan).
+- **FR-SPK-06.4**: Endpoint `GET /api/v1/speaking/saved-idioms` mengembalikan daftar idiom tersimpan (maksimal 20 item) disertai objek status kuota `{ current_quota_used: count, max_quota: 20 }` dan filter dialek.
 
 ---
 
@@ -186,7 +199,7 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
 
 ---
 
-### 5.3 Endpoint 3: Simpan Idiom / Ungkapan (Unlimited Quota)
+### 5.3 Endpoint 3: Simpan Idiom / Ungkapan (Maksimal Kuota 20)
 
 - **HTTP Method & Path**: `POST /api/v1/speaking/chat/save-idiom`
 - **Request Body**:
@@ -207,7 +220,21 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
     "idiom_id": "idiom-uuid-4412",
     "arabic_phrase": "عَامِل إِيه",
     "saved_at": "2026-11-05T23:20:00Z",
-    "status": "SAVED"
+    "status": "SAVED",
+    "current_quota_used": 12,
+    "max_quota": 20
+  }
+}
+```
+- **Respons Error Kuota Penuh (409 Conflict)**:
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERR_SAVED_IDIOMS_FULL",
+    "message": "⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)",
+    "current_quota_used": 20,
+    "max_quota": 20
   }
 }
 ```
@@ -263,6 +290,7 @@ PRD4 memegang otoritas atas alur pengguna, aturan bisnis kuota, dan pengalaman p
 | `400 Bad Request` | `ERR_EMPTY_AUDIO_INPUT` | Audio rekaman pengguna berukuran 0 byte atau RMS hening. | Tampilkan toast: *"Suara tidak terdengar. Coba lagi!"*. |
 | `401 Unauthorized` | `ERR_SESSION_EXPIRED` | Token JWT pengguna telah kedaluwarsa. | Arahkan pengguna ke layar Masuk (PRD1). |
 | `409 Conflict` | `ERR_SAVED_CONVERSATIONS_FULL` | Pengguna menyimpan percakapan saat kuota 3/3 sudah terisi penuh. | Buka modal *Replace Saved Conversation* untuk memilih 1 percakapan lama yang dihapus. |
+| `409 Conflict` | `ERR_SAVED_IDIOMS_FULL` | Pengguna menyimpan ungkapan ke-21 saat kuota 20/20 sudah terisi penuh. | Tolak mutasi dan render toast: *"⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)"*. |
 | `409 Conflict` | `ERR_IDIOM_ALREADY_SAVED` | Menyimpan idiom yang sudah tersimpan sebelumnya. | Sistem menangani secara idempoten; kembalikan `200 OK`. |
 | `504 Gateway Timeout`| `ERR_LLM_TIMEOUT` | Layanan AI LLM/STT mengalami latensi $>10$ detik. | Tampilkan tombol retry: *"AI sedang berpikir lama, ketuk untuk coba kirim ulang"*. |
 
@@ -329,7 +357,7 @@ BEFORE INSERT ON public.saved_conversations
 FOR EACH ROW
 EXECUTE FUNCTION check_saved_conversation_quota();
 
--- 4. Tabel Idiom Tersimpan (Kuota Tak Terbatas / Unlimited)
+-- 4. Tabel Idiom Tersimpan (Kapasitas Maksimal 20 Idiom per User)
 CREATE TABLE public.saved_idioms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -343,6 +371,23 @@ CREATE TABLE public.saved_idioms (
 );
 
 CREATE INDEX idx_saved_idioms_user_dialect ON public.saved_idioms (user_id, dialect, saved_at DESC);
+
+-- Fungsi & Trigger Validasi Kuota Maksimal 20 Idiom
+CREATE OR REPLACE FUNCTION check_saved_idiom_quota()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (SELECT COUNT(*) FROM public.saved_idioms WHERE user_id = NEW.user_id) >= 20 THEN
+        RAISE EXCEPTION '⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)'
+            USING ERRCODE = 'check_violation';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_enforce_saved_idiom_quota
+BEFORE INSERT ON public.saved_idioms
+FOR EACH ROW
+EXECUTE FUNCTION check_saved_idiom_quota();
 
 -- Row Level Security (RLS)
 ALTER TABLE public.chat_sessions ENABLE ROW LEVEL SECURITY;
@@ -409,6 +454,8 @@ CREATE POLICY "Users manage own saved idioms" ON public.saved_idioms FOR ALL TO 
 | **EC-SPK-03** | Pengguna keluar dari aplikasi saat audio AI diputar. | Audio berjalan di background atau terputus canggung. | Pasang event listener `visibilitychange` & `pagehide`: jika halaman masuk background, otomatis panggil `audioElement.pause()`. |
 | **EC-SPK-04** | Latensi jaringan tinggi saat memuat audio TTS. | Chat tampak macet menunggu audio. | Pisahkan streaming teks dan audio: teks gelembung chat dirender seketika, ikon audio menampilkan spinner loading kecil sampai file audio siap diputar. |
 | **EC-SPK-05** | Pengguna menekan tombol simpan idiom berulang kali secara cepat. | Risiko request ganda ke server (*race condition*). | Terapkan *debouncing* (300ms) di UI dan proteksi constraint unik `(user_id, arabic_phrase)` pada level DB. |
+| **EC-SPK-06** | Kuota simpan idiom mencapai 20/20. | Trigger DB melempar error `check_violation`. | Tangkap error `ERR_SAVED_IDIOMS_FULL`, tampilkan toast peringatan: *"⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)"*, dan pertahankan status tombol belum tersimpan. |
+| **EC-SPK-07** | Akses Clipboard API dibatasi oleh browser/OS. | `navigator.clipboard.writeText` menolak Promise. | Sediakan fallback menggunakan `document.execCommand('copy')` dengan elemen textarea tersembunyi agar teks tetap tersalin. |
 
 ---
 
@@ -429,11 +476,15 @@ CREATE POLICY "Users manage own saved idioms" ON public.saved_idioms FOR ALL TO 
 
 | Test Scenario ID | Area Pengujian | Kondisi Awal (*Pre-condition*) | Aksi / Prosedur Uji | Kriteria Hasil yang Diharapkan (*Expected Output*) |
 | :--- | :--- | :--- | :--- | :--- |
-| **T-SPK-01** | Pewarisan Dialek | Unit terakhir di menu Path adalah dialek Mesir. | Buka tab Dhou AI di bottom navigation. | Chat room langsung terbuka dengan badge dialek `Mesir 🇪🇬`, AI menyapa dalam dialek Mesir. |
-| **T-SPK-02** | Fallback Dialek Baru | User baru belum membuka Path. | Buka tab Dhou AI. | Chat room terbuka dengan dialek default `Fusha`. |
+| **T-SPK-01** | Pewarisan & Layout Dialek | Unit terakhir di menu Rute adalah dialek Mesir. | Buka tab Dhou AI di bottom navigation. | Chat room langsung terbuka dengan judul "Dhou AI" bersanding dropdown dialek di **rata kiri** (`Dhou AI [Mesir 🇪🇬 ▾]`), serta 3 pill stats `[🔥 3] [⚡ ∞] [⭐ 150]` dan ikon bookmark `🔖` di **rata kanan**. |
+| **T-SPK-02** | Fallback Dialek Baru | User baru belum membuka Rute. | Buka tab Dhou AI. | Chat room terbuka dengan dialek default `Dhou AI [Fusha ▾]` di rata kiri. |
 | **T-SPK-03** | Mic Play Start | Layar Chat Room aktif. | Tekan tombol mikrofon utama 🎙️. | Fitur AI aktif, mendengarkan input suara pengguna, dan membalas dengan audio TTS. |
 | **T-SPK-04** | Audio Replay | Gelembung pesan AI tampil di layar. | Mengetuk ikon speaker (🔊) pada gelembung AI. | Audio pengucapan pesan tersebut diputar ulang secara jernih. |
-| **T-SPK-05** | Save Idiom | Muncul ungkapan baru di chat. | Mengetuk tombol 🔖 Simpan Idiom. | Tombol berubah menjadi hijau *"Tersimpan ✓"*, data tersimpan di tabel `saved_idioms`. |
-| **T-SPK-06** | Save Idiom Unlimited | User sudah menyimpan 50 idiom. | Menyimpan idiom ke-51. | Berhasil tersimpan tanpa hambatan kuota (*201 Created*). |
+| **T-SPK-05** | Save Idiom Universal | Muncul pesan AI di chat (termasuk salam Fusha). | Mengetuk tombol 🔖 Simpan. | Tombol berubah menjadi kuning/amber khas Dhou *"Tersimpan ✓"*, kuota bertambah `⭐ {n}/20`, data tersimpan di tabel `saved_idioms`. |
+| **T-SPK-06** | Quota 20 Idiom Penuh | User sudah memiliki 20 idiom tersimpan. | Mengetuk tombol 🔖 Simpan pada pesan baru. | Permintaan ditolak (409 Conflict), muncul toast: *"⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)"*, tombol tidak berubah status. |
 | **T-SPK-07** | Quota 3 Sesi Penuh | User sudah memiliki 3 percakapan tersimpan. | Mengetuk "Simpan Percakapan Ini". | Muncul modal *Quota Limit Reached (3/3)* dengan opsi menghapus salah satu percakapan lama. |
 | **T-SPK-08** | Replace Conversation | Modal kuota penuh terbuka. | Memilih percakapan lama ke-1 untuk diganti. | Percakapan lama terhapus, percakapan baru tersimpan; kuota tetap 3/3. |
+| **T-SPK-13** | Buka Koleksi Terpadu | Chat room aktif di mobile/desktop. | Mengetuk ikon bookmark (🔖) di rata kanan header. | Layar `SavedCollectionsPage` terbuka menampilkan antarmuka 2 tab: Tab 1 "Idiom Tersimpan" dan Tab 2 "Percakapan Tersimpan". |
+| **T-SPK-14** | Switch Tab Koleksi | Layar koleksi terpadu aktif di Tab Idiom. | Mengetuk label Tab 2 "Percakapan". | Tampilan beralih menampilkan daftar riwayat percakapan tersimpan (maks 3) dengan status kuota `📁 {n}/3`. |
+| **T-SPK-15** | Dialect Switcher Dropdown | Chat room terbuka di mobile atau desktop. | Mengetuk dropdown dialek di samping judul Dhou AI. | Menu dropdown pilihan dialek (Fusha, Mesir, Syam) muncul secara konsisten di desktop/mobile dan mengubah dialek aktif tanpa berpindah layar. |
+| **T-SPK-16** | Copy Arabic Text | Gelembung pesan AI/User tampil. | Mengetuk tombol 📋 Salin. | Teks Arab berharakat tersalin ke clipboard, label tombol berubah menjadi *"Tersalin!"* (2 detik), toast konfirmasi muncul. |

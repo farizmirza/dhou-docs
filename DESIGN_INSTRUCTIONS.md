@@ -119,20 +119,25 @@ Penamaan Frame, Section, dan Komponen di Figma harus **sinkron 1:1 dengan ID pad
 
 #### Contoh Penerapan Riil di Figma:
 
-* **Modul Autentikasi (PRD1 / FRD1):**
+* **PRD1 — User Authentication, Sign In, and Password Recovery (AUTH):**
   - `[US-AUTH-01] Sign In / Default`
   - `[US-AUTH-01] Sign In / Validation Error`
   - `[US-AUTH-02] Forgot Password / Email Sent Modal`
+  - `[US-AUTH-03] Register / Default`
+  - `[US-AUTH-03] Register / Password Strength Indicator`
 
-* **Modul Gamified Path (PRD2 / FRD2):**
+* **PRD2 — Gamified Learning Path, Sentence Arrangement, Energy, and Daily Streak (PATH):**
   - `[US-PATH-01] Path Canvas / Units Overview`
   - `[US-PATH-02] Sentence Builder / Question 1 (Initial)`
   - `[US-PATH-02] Sentence Builder / Token Selected (Active)`
   - `[US-PATH-03] Sentence Builder / Answer Feedback - Correct (Sheet)`
   - `[US-PATH-03] Sentence Builder / Answer Feedback - Wrong (Sheet)`
+  - `[US-PATH-04] Energy Bar / Low Energy Warning`
+  - `[US-PATH-05] Daily Streak / Streak Active`
+  - `[US-PATH-05] Daily Streak / Streak Broken (Empty State)`
   - `[US-PATH-06] Lesson Summary / Celebration (Streak Ignited)`
 
-* **Modul Video Learning (PRD3 / FRD3):**
+* **PRD3 — Video Contextual Learning, Interactive Subtitles, and Shadowing (VID):**
   - `[US-VID-01] Video Feed / All Dialects`
   - `[US-VID-01] Video Feed / Filter Mesir (Empty State)`
   - `[US-VID-02] Video Player / Playing (Dual Subtitles)`
@@ -142,6 +147,20 @@ Penamaan Frame, Section, dan Komponen di Figma harus **sinkron 1:1 dengan ID pad
   - `[US-VID-04] Shadowing / Sheet - Recording (Waveform Active)`
   - `[US-VID-04] Shadowing / Sheet - Compare (Dual Player)`
   - `[US-VID-05] Word Definition / Drawer - Bookmark Saved`
+
+* **PRD4 — Dhou Speaking, Conversational AI Chat Room, and Idiom Saver (SPK):**
+  - `[US-SPK-01] Chat Room / Default (Dialect Inherited)`
+  - `[US-SPK-01] Chat Room / Empty State (No Messages Yet)`
+  - `[US-SPK-02] Chat Room / Recording (Mic Active - Waveform)`
+  - `[US-SPK-02] Chat Room / AI Responding (Loading Bubble)`
+  - `[US-SPK-03] Chat Bubble / AI - Bilingual (AR + ID Visible)`
+  - `[US-SPK-03] Chat Bubble / AI - Translation Hidden`
+  - `[US-SPK-04] Idiom Saver / Bookmark Saved (Toast Confirmation)`
+  - `[US-SPK-04] Saved Idioms / List - Default`
+  - `[US-SPK-04] Saved Idioms / Empty State`
+  - `[US-SPK-05] Save Conversation / Quota Full Modal (3/3)`
+  - `[US-SPK-05] Saved Conversations / List - 3 Sessions`
+  - `[US-SPK-06] Chat Room Header / Quick Access (Saved Icons)`
 
 ---
 
