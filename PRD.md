@@ -57,7 +57,7 @@ Dhou dibagi menjadi **4 Pilar Utama**:
 ┌─────────────────────────────────────────────────────────────────┐
 │                     TopBar (Streak, Energy, Dialect)            │
 ├───────────────┬─────────────────┬───────────────┬───────────────┤
-│    [1. Learn] │   [2. Video]    │ [3. Dhou AI]  │  [4. Review]  │
+│    [1. Rute]  │   [2. Video]    │ [3. Dhou AI]  │  [4. Review]  │
 │  Gamified Path│ Contextual Input│ Conversational│ SRS Retention │
 └───────────────┴─────────────────┴───────────────┴───────────────┘
 ```
@@ -77,7 +77,7 @@ Dhou dibagi menjadi **4 Pilar Utama**:
      - Mode Shadowing: Pengguna merekam suara mereka (*Record-and-Compare*) untuk melatih ritme dan intonasi.
   5. **Quick Save to Review:** Tombol simpan kosakata atau kalimat penting ke modul Review.
 
-### 4.2 Modul 2: Gamified Learning Path (Structured Practice ala Duolingo)
+### 4.2 Modul 2: Gamified Learning Path ("Rute") (Structured Practice ala Duolingo)
 *Mentransformasi input kontekstual menjadi latihan pemahaman terstruktur bertahap.*
 
 - **Fitur Kunci:**

@@ -7,14 +7,15 @@
 | **Document ID** | FRD2 |
 | **Source PRD** | [PRD2 — Gamified Learning Path, Sentence Arrangement, Energy Engine, and Daily Streak, Version 1.0, Approved](../PRD/PRD2%20-%20Gamified%20Learning%20Path,%20Sentence%20Arrangement,%20Energy,%20and%20Daily%20Streak.md) |
 | **Feature ID** | PATH-L-01, PATH-L-02, PATH-L-03, PATH-L-04, PATH-L-05, PATH-L-06 |
+| **Feature Name** | Gamified Learning Path ("Rute"), Dialect Isolation, Header Navigation, Sentence Arrangement, Energy Engine, and Daily Streak |
 | **Application** | Dhou (تطبيق ضوء) — Mobile Web (PWA) & iOS Native Wrapper (CapacitorJS) |
-| **Module** | Gamified Learning Path & Progression Core |
+| **Module** | Gamified Learning Path ("Rute") & Progression Core |
 | **Sprint** | Sprint 2 |
 | **Status** | Approved — disetujui sebagai kontrak implementasi |
 | **Approved On** | 2026-11-02 |
 | **Implementation Status** | Specification only — implementasi belum diverifikasi |
-| **Version** | 1.0 |
-| **Last Updated** | 2026-11-02 |
+| **Version** | 1.1 |
+| **Last Updated** | 2026-11-08 |
 | **Owner** | Product / Lead Engineering Dhou |
 | **Target Boundary Version** | `services/learning-api` v1.0.0, `apps/dhou-mobile` v1.0.0 |
 | **Dependencies** | PRD2, FRD1 (Authentication), Supabase PostgreSQL 15+, CapacitorJS Core, Howler.js / Web Audio API |
@@ -29,7 +30,7 @@ PRD2 memegang otoritas atas proses bisnis, aturan gamifikasi, dan intensi pedago
 
 | Sumber | Baseline yang Digunakan | Peruntukan Teknis |
 | :--- | :--- | :--- |
-| [PRD2](../PRD/PRD2%20-%20Gamified%20Learning%20Path,%20Sentence%20Arrangement,%20Energy,%20and%20Daily%20Streak.md) | Versi 1.0, Approved | US-PATH-01 s/d US-PATH-06, Business Rules RL-EX-01..05, RL-EQ-01..04, RL-EN-01..04, RL-ST-01..04, RL-PR-01..03 |
+| [PRD2](../PRD/PRD2%20-%20Gamified%20Learning%20Path,%20Sentence%20Arrangement,%20Energy,%20and%20Daily%20Streak.md) | Versi 1.1, Approved | US-PATH-01 s/d US-PATH-09, Business Rules RL-MN-01, RL-HD-01, RL-LG-01..02, RL-EX-01..05, RL-EQ-01..04, RL-EN-01..04, RL-ST-01..04, RL-PR-01..03 |
 | [design-system.md](../../design-system.md) | Versi 1.0, Approved | Token warna (`#FF8904`, `#51A2FF`, `#22C55E`, `#EF4444`), tipografi (Fredoka & Amiri), tombol 3D Dhou |
 | [vibe-coding-guidelines.md](../../vibe-coding-guidelines.md) | Versi 1.0, Approved | Batasan ukuran komponen, penanganan ortografi Arab RTL, clean architecture, debouncing |
 | [RESEARCH_REFERENCE_MAPPING.md](../../RESEARCH_REFERENCE_MAPPING.md) | Versi 1.0, Master Reference | Aktivitas Tipe 4: *Sentence arrangement* (rekonstruksi sintaksis), siklus 4 pilar pedagogis |
@@ -39,18 +40,19 @@ PRD2 memegang otoritas atas proses bisnis, aturan gamifikasi, dan intensi pedago
 ## 2. Scope and Source Reconciliation
 
 ### 2.1 Rekonsiliasi Ruang Lingkup Teknis
-1. **Peta Belajar & Navigasi Node (FR-PATH-01)**: Hierarki `learning_units` $\rightarrow$ `learning_nodes` dengan rendering zig-zag adaptif mobile, pemusatan scroll viewport otomatis (*auto-scroll*), dan penegakan status node (`LOCKED`, `CURRENT`, `COMPLETED`).
-2. **Kuis Susun Kata Arab (FR-PATH-02)**: Setiap lesson memuat tepat **10 butir soal** (*single exercise variant* di MVP). Setiap soal menyediakan baki balok kata acak yang berisi kata-kata kalimat benar ditambah **tepat 2 kata pengecoh (*distractors*)**, dukungan RTL penuh, dan audio player.
-3. **Mekanisme Antrean Error Re-queue (FR-PATH-03)**: Soal yang dijawab salah tidak menggugurkan sesi, melainkan dipindahkan ke ekor antrean (`active_queue.push(failedQuestion)`) dan diacak ulang susunannya saat dipanggil kembali di akhir sesi. Sesi hanya selesai jika antrean kosong.
-4. **Sistem Kuota Energi Cerdas (FR-PATH-04)**: Arsitektur database menyimpan struktur komersial (Free Plan 5 energi, refill 1/4 jam, langganan Premium tak terbatas), namun di fase MVP diproteksi oleh *feature flag* `ENV_MVP_UNLIMITED_ENERGY = true` sehingga jawaban salah **tidak memotong kuota energi**.
-5. **Mesin Api Streak Harian (FR-PATH-05)**: Kalkulasi berbasis zona waktu lokal pengguna (`user_timezone`). Minimal menyelesaikan **1 sesi lesson lengkap (10 butir soal tuntas)** untuk menyalakan api streak (🔥). Maksimal kenaikan +1 per hari kalender.
-6. **Layar Rangkuman & Pembukaan Node Baru (FR-PATH-06)**: Eksekusi transaksi database atomik (*Atomic DB Transaction*) pasca-soal terakhir: penambahan XP (+10 materi baru, +5 pengulangan), kalkulasi akurasi percobaan pertama, pembaruan streak, dan pembukaan kunci node berikutnya ($N+1$).
+1. **Peta Belajar & Navigasi Node (FR-PATH-01)**: Nama menu utama pada bottom navigation resmi bernama **"Rute"**. Hierarki `learning_units` $\rightarrow$ `learning_nodes` dengan rendering zig-zag adaptif mobile, pemusatan scroll viewport otomatis (*auto-scroll*), dan penegakan status node (`LOCKED`, `CURRENT`, `COMPLETED`).
+2. **Header Rute & Dialect Dropdown UI (FR-PATH-01.6)**: Header menampilkan judul **"Rute"** bersanding dengan **Dropdown Pemilih Dialek** di kiri (`Rute [Mesir 🇪🇬 ▾]`) yang seragam berbentuk Dropdown UI pada desktop dan mobile. Sisi kanan menampilkan indikator stats pembelajaran: Streak (`🔥 3`), Energi (`⚡ ∞`), dan XP (`⭐ 150`).
+3. **Kuis Susun Kata Arab (FR-PATH-02)**: Setiap lesson memuat tepat **10 butir soal** (*single exercise variant* di MVP). Setiap soal menyediakan baki balok kata acak yang berisi kata-kata kalimat benar ditambah **tepat 2 kata pengecoh (*distractors*)**, dukungan RTL penuh, dan audio player.
+4. **Mekanisme Antrean Error Re-queue (FR-PATH-03)**: Soal yang dijawab salah tidak menggugurkan sesi, melainkan dipindahkan ke ekor antrean (`active_queue.push(failedQuestion)`) dan diacak ulang susunannya saat dipanggil kembali di akhir sesi. Sesi hanya selesai jika antrean kosong.
+5. **Sistem Kuota Energi Cerdas (FR-PATH-04)**: Arsitektur database menyimpan struktur komersial (Free Plan 5 energi, refill 1/4 jam, langganan Premium tak terbatas), namun di fase MVP diproteksi oleh *feature flag* `ENV_MVP_UNLIMITED_ENERGY = true` sehingga jawaban salah **tidak memotong kuota energi**.
+6. **Mesin Api Streak Harian (FR-PATH-05)**: Kalkulasi berbasis zona waktu lokal pengguna (`user_timezone`). Minimal menyelesaikan **1 sesi lesson lengkap (10 butir soal tuntas)** untuk menyalakan api streak (🔥). Maksimal kenaikan +1 per hari kalender.
+7. **Layar Rangkuman & Pembukaan Node Baru (FR-PATH-06)**: Eksekusi transaksi database atomik (*Atomic DB Transaction*) pasca-soal terakhir: penambahan XP (+10 materi baru, +5 pengulangan), kalkulasi akurasi percobaan pertama, pembaruan streak, dan pembukaan kunci node berikutnya ($N+1$).
 
 ### 2.2 Traceability Matrix (PRD2 $\rightarrow$ FRD2)
 
 | PRD2 Source Trace | FRD ID | Operation ID | Frontend Integration Target | Test Scenario ID |
 | :--- | :--- | :--- | :--- | :--- |
-| US-PATH-01; AC-PATH-01-A..D; RL-PR-01 | **FR-PATH-01** | `path_get_overview` | `PathTreeCanvas`, `NodeButton`, `UnitBanner` | T-PATH-01, 02, 03 |
+| US-PATH-01, 08; AC-PATH-01-A..D; RL-MN-01, RL-HD-01 | **FR-PATH-01** | `path_get_overview` | `RuteHeader`, `DialectDropdown`, `PathTreeCanvas`, `NodeButton`, `UnitBanner` | T-PATH-01, 02, 03, 16, 17 |
 | US-PATH-02; AC-PATH-02-A..E; RL-EX-01..05 | **FR-PATH-02** | `lesson_start`, `lesson_submit_answer` | `SentenceBuilderZone`, `WordBankTray`, `WordTile` | T-PATH-04, 05, 06 |
 | US-PATH-03; AC-PATH-03-A..D; RL-EQ-01..04 | **FR-PATH-03** | `lesson_requeue_error` | `QuizQueueManager`, `FeedbackBottomSheet` | T-PATH-07, 08 |
 | US-PATH-04; AC-PATH-04-A..D; RL-EN-01..04 | **FR-PATH-04** | `energy_check_policy`, `energy_consume` | `EnergyTopBarPill`, `EnergyInfoModal` | T-PATH-09, 10 |
@@ -70,15 +72,17 @@ PRD2 memegang otoritas atas proses bisnis, aturan gamifikasi, dan intensi pedago
 
 ## 4. Functional Requirements
 
-### 4.1 FR-PATH-01 — Navigasi Visual Path & Node Belajar
+### 4.1 FR-PATH-01 — Navigasi Visual Rute, Node Belajar & Header Dropdown
 
 | ID | Kebutuhan Fungsional | Sumber PRD2 |
 | :--- | :--- | :--- |
-| **FR-PATH-01.1** | Endpoint `GET /api/v1/path/overview` wajib mengembalikan hierarki unit, daftar node per unit dengan status relasional pengguna (`LOCKED`, `CURRENT`, atau `COMPLETED`), serta status agregat streak dan energi. | AC-PATH-01-A; AC-PATH-01-B |
+| **FR-PATH-01.1** | Endpoint `GET /api/v1/path/overview?dialect=:dialect` wajib mengembalikan hierarki unit, daftar node per unit dengan status relasional pengguna (`LOCKED`, `CURRENT`, atau `COMPLETED`), serta status agregat streak dan energi sesuai dialek yang dipilih. | AC-PATH-01-A; AC-PATH-01-B |
 | **FR-PATH-01.2** | Algoritma penentuan status node: Node ke-1 berstatus `CURRENT` (jika user baru) atau `COMPLETED` (jika sudah tuntas). Node $N+1$ berstatus `CURRENT` jika dan hanya jika Node $N$ berstatus `COMPLETED`. Seluruh node setelah node `CURRENT` wajib berstatus `LOCKED`. | AC-PATH-01-B; RL-PR-01 |
 | **FR-PATH-01.3** | Frontend merender node pada kanvas SVG zig-zag 5-jalur (*horizontal offsets*: 0%, -20%, 0%, +20%, 0%) yang proporsional pada lebar kontainer mobile 360px–430px. | UI 8.1; AC-PATH-01-A |
 | **FR-PATH-01.4** | Mengklik node `LOCKED` memicu getaran haptic error (via `@capacitor/haptics`), animasi visual goyang (*CSS shake 300ms*), dan toast informasi: *"Selesaikan pelajaran sebelumnya terlebih dahulu!"*. Mutasi API ke sesi kuis dilarang keras di client dan server (`403 Forbidden`). | AC-PATH-01-C; BR-PATH-01 |
-| **FR-PATH-01.5** | Saat viewport halaman Path dimuat, komponen `PathView` wajib memanggil `scrollIntoView({ behavior: 'smooth', block: 'center' })` ke elemen DOM node yang memiliki status `CURRENT`. | AC-PATH-01-D |
+| **FR-PATH-01.5** | Saat viewport halaman Rute dimuat, komponen `PathView` wajib memanggil `scrollIntoView({ behavior: 'smooth', block: 'center' })` ke elemen DOM node yang memiliki status `CURRENT`. | AC-PATH-01-D |
+| **FR-PATH-01.6** | Komponen `RuteHeader` wajib merender tata letak dua sisi: Sisi kiri menampilkan judul **"Rute"** bersanding langsung dengan komponen **Dropdown Pemilih Dialek** (`Rute [Mesir 🇪🇬 ▾]`) yang seragam berbentuk Dropdown UI pada desktop dan mobile. Sisi kanan menampilkan 3 pill indikator status pembelajaran berurutan: Streak (`🔥 {streak}`), Energi (`⚡ {energy}`), dan XP (`⭐ {xp}`). | AC-PATH-01-B; AC-PATH-08-C; RL-HD-01 |
+
 
 ---
 
@@ -706,6 +710,9 @@ Untuk mengukur metrik pada PRD2 Section 10, sistem memicu pengiriman event anali
 | **T-PATH-13** | Timezone-Aware Daily Boundary | Selesaikan lesson pada pukul 23:55 (hari $T$) dan 00:05 (hari $T+1$) waktu lokal | Sistem mencatat 2 hari aktif berturut-turut; streak bertambah 2 hari. |
 | **T-PATH-14** | Pembukaan Node $N+1$ Otomatis | Tekan tombol "Lanjut" di modal summary | Node $N$ berubah `COMPLETED`, node $N+1$ berubah `CURRENT` dan dapat langsung dimainkan. |
 | **T-PATH-15** | Pembatalan Sesi Tengah Jalan | Pengguna menutup browser di soal ke-5 | Sesi ditandai `ABANDONED`; streak tidak bertambah dan XP tidak diberikan. |
+| **T-PATH-16** | Header Rute & Stats Pills | Buka landing screen Rute | Sisi kiri menampilkan judul "Rute" bersanding Dropdown dialek `[Mesir 🇪🇬 ▾]`; sisi kanan menampilkan 3 pill stats: `[🔥 3] [⚡ ∞] [⭐ 150]`. |
+| **T-PATH-17** | Interaksi Dropdown Dialek Desktop & Mobile | Klik/tap dropdown dialek di samping judul "Rute" | Menu dropdown terbuka secara instan di desktop dan mobile; memilih dialek lain memuat data kurikulum dialek tersebut. |
+
 
 ---
 

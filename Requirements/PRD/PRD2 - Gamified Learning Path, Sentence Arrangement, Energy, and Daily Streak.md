@@ -6,16 +6,16 @@
 | :--- | :--- |
 | **Document ID** | PRD2 |
 | **Feature ID** | PATH-L-01, PATH-L-02, PATH-L-03, PATH-L-04, PATH-L-05, PATH-L-06, PATH-L-07 |
-| **Feature Name** | Gamified Learning Path ("Path"), Language Isolation, Header Navigation, Bagian & Unit Structure, Vocabulary Lesson, Sentence Arrangement, Energy Engine, and Daily Streak |
+| **Feature Name** | Gamified Learning Path ("Rute"), Language Isolation, Header Navigation, Bagian & Unit Structure, Vocabulary Lesson, Sentence Arrangement, Energy Engine, and Daily Streak |
 | **Application** | Dhou (تطبيق ضوء) — Mobile Web (PWA) & iOS Native Wrapper (CapacitorJS) |
-| **Module** | Gamified Learning Path & Progression Core |
+| **Module** | Gamified Learning Path ("Rute") & Progression Core |
 | **Sprint** | Sprint 2 |
 | **Epic** | Learning Progression, Gamification & Sentence Builder |
 | **Priority** | Critical (P0) |
 | **Status** | Approved |
 | **Implementation Status** | Planned |
-| **Version** | 1.0 |
-| **Last Updated** | 2026-11-06 |
+| **Version** | 1.1 |
+| **Last Updated** | 2026-11-08 |
 | **Product Owner** | Fariz Mirza Abdillah |
 | **Dependencies** | PRD1 (User Authentication), Design System (Figma Dhou), Research Reference Mapping (4-Pillar Cycle) |
 
@@ -51,9 +51,9 @@ Ketiadaan modul *Gamified Learning Path* pada fase ini menimbulkan hambatan krit
 
 ## 3. Purpose
 
-Menyediakan modul **Path** (nama menu resmi di navigasi bawah) pada aplikasi Dhou yang memfasilitasi:
+Menyediakan modul **Rute** (nama resmi menu pembelajaran di bilah navigasi bawah) pada aplikasi Dhou yang memfasilitasi:
 - Visualisasi peta navigasi materi dengan hierarki **Bagian → Unit → Lesson Nodes** per bahasa yang terisolasi (Fusha / 'Ammiyyah, dsb. tidak pernah tercampur).
-- Header Path dengan **dropdown pemilihan bahasa** di kiri dan indikator **Streak 🔥, Energi ⚡, dan XP** di kanan.
+- Header Rute dengan judul menu **"Rute"** dan **dropdown pemilihan dialek tepat di samping judul** di sisi kiri (`Rute [Mesir 🇪🇬 ▾]`) yang konsisten menggunakan komponen Dropdown di Desktop maupun Mobile, serta indikator **Streak 🔥, Energi ⚡, dan XP ⭐** di sisi kanan.
 - **Vocabulary Introduction Lesson** di tiap awal Unit sebagai jembatan kosa kata sebelum sesi latihan.
 - **Exercise** di tiap akhir Unit sebagai ujian komprehensif unit tersebut.
 - Sesi latihan interaktif penyusunan kalimat berbahasa Arab (*Sentence Arrangement*) sebanyak 10 butir soal dengan 2 kata pengecoh.
@@ -63,11 +63,11 @@ Menyediakan modul **Path** (nama menu resmi di navigasi bawah) pada aplikasi Dho
 
 ## 4. Objectives
 
-1. Menetapkan nama menu resmi tab belajar sebagai **"Path"** di bilah navigasi bawah aplikasi Dhou.
-2. Mengimplementasikan **Isolasi Jalur Belajar per Bahasa**: setiap bahasa (Fusha / 'Ammiyyah Mesir / 'Ammiyyah Syam / dll.) memiliki path, progres, dan data node yang terpisah secara independen. Data antara bahasa yang berbeda tidak pernah bercampur.
-3. Membangun **Header Path** dengan tata letak:
-   - **Kiri**: Dropdown pemilih bahasa aktif (menampilkan nama bahasa saat ini; saat diklik membuka daftar pilihan bahasa yang tersedia).
-   - **Kanan**: Tiga indikator pill: Api Streak (🔥 + angka), Energi (⚡ ∞ / angka), dan XP (⭐ + total poin).
+1. Menetapkan nama menu resmi tab belajar sebagai **"Rute"** di bilah navigasi bawah aplikasi Dhou (menggantikan nama lama "Belajar" / "Path").
+2. Mengimplementasikan **Isolasi Jalur Belajar per Bahasa**: setiap bahasa (Fusha / 'Ammiyyah Mesir / 'Ammiyyah Syam / dll.) memiliki rute, progres, dan data node yang terpisah secara independen. Data antara bahasa yang berbeda tidak pernah bercampur.
+3. Membangun **Header Rute** dengan tata letak:
+   - **Kiri**: Judul menu **"Rute"** dengan Dropdown pemilih dialek/bahasa aktif tepat di samping judul (misal: `Rute [Mesir 🇪🇬 ▾]`). Format pilihan bahasa wajib berbentuk komponen **Dropdown** yang seragam baik di desktop maupun mobile.
+   - **Kanan**: Tiga indikator pill stats pembelajaran: Api Streak (🔥 + angka), Energi (⚡ ∞ / angka), dan XP (⭐ + total poin).
 4. Mendefinisikan dan mengimplementasikan hierarki konten **Bagian → Unit → Lesson/Exercise**:
    - **Bagian** (*Section*): Kelompok tematik besar yang menghimpun beberapa Unit. Contoh: "Bagian 1: Dasar-Dasar Percakapan".
    - **Unit**: Kumpulan Lesson yang berfokus pada satu tema spesifik. Setiap Unit terdiri dari **minimal 3 Lesson + 1 Exercise** di akhir Unit.
@@ -86,7 +86,7 @@ Menyediakan modul **Path** (nama menu resmi di navigasi bawah) pada aplikasi Dho
     - Skema model data siap langganan: Free Plan (5 kuota harian) vs Premium Plan (Unlimited $\infty$).
     - Kebijakan Promo MVP: Free Plan mendapatkan status *Unlimited Energy Promo* (jawaban salah tidak memotong energi dan tidak memblokir sesi belajar).
     - Indikator UI di Header menampilkan status energi dengan simbol tak hingga (`⚡ ∞`).
-11. Menampilkan layar rangkuman penyelesaian sesi (**Lesson Summary Modal**) dengan perolehan XP (+10 XP untuk sesi baru, +5 XP untuk latihan ulang), persentase akurasi percobaan pertama, animasi perayaan api streak, dan pembukaan kunci node berikutnya di Path.
+11. Menampilkan layar rangkuman penyelesaian sesi (**Lesson Summary Modal**) dengan perolehan XP (+10 XP untuk sesi baru, +5 XP untuk latihan ulang), persentase akurasi percobaan pertama, animasi perayaan api streak, dan pembukaan kunci node berikutnya di Rute.
 
 ---
 
@@ -94,22 +94,23 @@ Menyediakan modul **Path** (nama menu resmi di navigasi bawah) pada aplikasi Dho
 
 ### In Scope
 
-- **Nama Menu Tab Belajar: "Path"**
-  - Nama label pada bilah navigasi bawah (Bottom Navigation Bar) untuk tab modul pembelajaran adalah **"Path"** — bukan "Belajar", "Learn", atau label lainnya.
+- **Nama Menu Tab Belajar: "Rute"**
+  - Nama label pada bilah navigasi bawah (Bottom Navigation Bar) untuk tab modul pembelajaran adalah **"Rute"** — bukan "Belajar", "Path", atau label lainnya.
 
 - **Isolasi Jalur Belajar per Bahasa (PATH-L-00)**
-  - Setiap bahasa yang didukung Dhou (Fusha / 'Ammiyyah Mesir / 'Ammiyyah Syam / dll.) memiliki data Path, struktur Bagian/Unit, Lesson Node, dan rekam progres pengguna yang **terpisah sepenuhnya**.
-  - Pengguna hanya dapat melihat dan mengerjakan Path dari satu bahasa dalam satu tampilan (bahasa yang dipilih via dropdown header).
+  - Setiap bahasa yang didukung Dhou (Fusha / 'Ammiyyah Mesir / 'Ammiyyah Syam / dll.) memiliki data Rute, struktur Bagian/Unit, Lesson Node, dan rekam progres pengguna yang **terpisah sepenuhnya**.
+  - Pengguna hanya dapat melihat dan mengerjakan Rute dari satu bahasa dalam satu tampilan (bahasa yang dipilih via dropdown header).
   - Backend tidak pernah mencampur entri progres lintas bahasa dalam satu query atau tampilan.
 
-- **Header Path (PATH-L-H)**
-  - Tata letak header di halaman Path (rata dua sisi):
-    - **Rata Kiri**: Komponen Dropdown Pemilih Bahasa — menampilkan nama bahasa aktif (contoh: *"Fusha (الفصحى)"*) beserta ikon bendera/ikon bahasa. Saat diketuk, membuka bottom sheet daftar bahasa yang tersedia.
-    - **Rata Kanan**: Tiga pill indikator berurutan:
-      1. 🔥 Api Streak + angka hari berturut-turut.
-      2. ⚡ Energi + angka atau simbol `∞` (MVP).
-      3. ⭐ XP + total poin akumulasi pengguna.
-  - Header ini persisten (sticky) di bagian atas halaman Path saat pengguna scroll.
+- **Header Rute (PATH-L-H)**
+  - Tata letak header di halaman Rute (rata dua sisi):
+    - **Rata Kiri**: Judul menu **"Rute"** bersanding langsung dengan **Dropdown Pemilih Dialek** (`Rute [Mesir 🇪🇬 ▾]`). Pemilihan dialek wajib menggunakan komponen **Dropdown UI** yang seragam di desktop dan mobile (bukan modal terpisah).
+    - **Rata Kanan**: Tiga pill indikator status belajar berurutan:
+      1. 🔥 Api Streak + angka hari berturut-turut (misal: `🔥 3`).
+      2. ⚡ Energi + angka atau simbol `∞` (misal: `⚡ ∞`).
+      3. ⭐ XP + total poin akumulasi pengguna (misal: `⭐ 150`).
+  - Header ini persisten (sticky) di bagian atas halaman Rute saat pengguna scroll.
+
 
 - **Hierarki Konten: Bagian → Unit → Lesson/Exercise (PATH-L-STR)**
 
@@ -212,14 +213,15 @@ Menyediakan modul **Path** (nama menu resmi di navigasi bawah) pada aplikasi Dho
 
 ## 7. User Flow & Navigation Diagram
 
-Berikut adalah alur perjalanan pengguna dari pemilihan bahasa di header **Path**, melalui Vocabulary Lesson, pengerjaan 10 soal susun kata, penanganan antrean soal salah, hingga aktivasi Api Streak dan pembukaan kunci node berikutnya:
+Berikut adalah alur perjalanan pengguna dari pemilihan dialek di header **Rute**, melalui Vocabulary Lesson, pengerjaan 10 soal susun kata, penanganan antrean soal salah, hingga aktivasi Api Streak dan pembukaan kunci node berikutnya:
 
 ```mermaid
 flowchart TD
-    Start(["Pengguna Membuka Tab 'Path'"]) --> ViewPath["Lihat Peta Belajar / Visual Path\n(Sesuai Bahasa yang Dipilih)"]
-    ViewPath --> CheckHeader["Header Path:\nKiri: Dropdown Bahasa | Kanan: Streak 🔥 · Energi ⚡ · XP ⭐"]
-    ViewPath --> SwitchLang{"Ganti Bahasa?"}
-    SwitchLang -- Ya --> SelectLang["Pilih Bahasa dari Dropdown\n(Path berganti ke bahasa terpilih)"]
+    Start(["Pengguna Membuka Tab 'Rute'"]) --> ViewPath["Lihat Peta Belajar / Visual Rute\n(Sesuai Dialek yang Dipilih)"]
+    ViewPath --> CheckHeader["Header Rute:\nKiri: Rute [Dialek ▾] | Kanan: Streak 🔥 · Energi ⚡ · XP ⭐"]
+    SwitchLang{"Ganti Dialek?"}
+    ViewPath --> SwitchLang
+    SwitchLang -- Ya --> SelectLang["Pilih Dialek dari Dropdown\n(Rute berganti ke dialek terpilih)"]
     SelectLang --> ViewPath
     SwitchLang -- Tidak --> ClickNode{"Pilih Node Pembelajaran"}
     
@@ -298,9 +300,9 @@ flowchart TD
 | **Description** | Sebagai pembelajar bahasa Arab, saya ingin melihat peta jalur belajar (*Learning Path Tree*) dengan visualisasi node berkelok dan status yang jelas (Selesai, Aktif, Terkunci) per unit agar saya memahami posisi dan arah kemajuan belajar saya. |
 
 #### User Journey
-1. Pengguna mengetuk tab **"Path"** pada bilah navigasi bawah (*Bottom Navigation Bar*).
-2. Header Path tampil dengan **dropdown pemilih bahasa** di sisi kiri (menampilkan bahasa aktif, misal: *"Fusha (الفصحى)"*) dan tiga pill **Streak 🔥, Energi ⚡, XP ⭐** di sisi kanan.
-3. Di bawah header, Path menampilkan konten berurutan: Banner Bagian (misal: *"Bagian 1: Dasar-Dasar Percakapan"*), lalu Banner Unit (misal: *"Unit 1: Perkenalan & Sapaan Sehari-hari"*), diikuti jalur zig-zag node.
+1. Pengguna mengetuk tab **"Rute"** pada bilah navigasi bawah (*Bottom Navigation Bar*).
+2. Header Rute tampil dengan judul **"Rute"** dan **dropdown pemilih dialek** tepat di samping judul di sisi kiri (`Rute [Mesir 🇪🇬 ▾]`), serta tiga pill status pembelajaran di sisi kanan: **Streak 🔥, Energi ⚡, XP ⭐**.
+3. Di bawah header, Rute menampilkan konten berurutan: Banner Bagian (misal: *"Bagian 1: Dasar-Dasar Percakapan"*), lalu Banner Unit (misal: *"Unit 1: Perkenalan & Sapaan Sehari-hari"*), diikuti jalur zig-zag node.
 4. Node pertama Unit ditandai badge **"Kosa Kata"** (Vocabulary Lesson), node terakhir Unit ditandai badge **"Exercise"**.
 5. Pengguna melihat node aktif saat ini memiliki efek lingkaran berdenyut (*subtle pulse glow*) berwarna Warm Orange (`#FF8904`) dengan tooltip melayang bertuliskan "Mulai!".
 6. Node-node sebelum node aktif ditandai lingkaran biru/hijau dengan ikon centang putih menandakan telah selesai (*Completed*).
@@ -308,36 +310,30 @@ flowchart TD
 8. Pengguna mengetuk node aktif untuk memulai sesi belajar.
 
 #### Acceptance Criteria
-- **AC-PATH-01-A (Visual Layout):** Sistem wajib merender tata letak pohon kurikulum berurutan dari atas ke bawah dengan posisi horizontal zig-zag yang proporsional pada resolusi mobile (360px–430px).
-- **AC-PATH-01-B (Node States):** Setiap node wajib mencerminkan satu dari tiga status valid:
-  - `COMPLETED`: Lingkaran penuh warna Dialect Blue (`#51A2FF`), ikon centang putih, dapat diklik untuk sesi latihan ulang (+5 XP).
-  - `CURRENT`: Lingkaran warna Warm Orange (`#FF8904`), beranimasi denyut (*pulsing halo*), tooltip "Mulai!", dapat diklik untuk memulai sesi baru (+10 XP).
-  - `LOCKED`: Lingkaran abu-abu `#D1D5DB`, ikon gembok `#9CA3AF`, tidak dapat diklik untuk memulai sesi baru.
-- **AC-PATH-01-C (Locked Click Feedback):** Jika pengguna mengetuk node berstatus `LOCKED`, sistem wajib memunculkan animasi goyang (*shake animation*) pada gembok disertai pesan toast: *"Selesaikan pelajaran sebelumnya terlebih dahulu untuk membuka kunci materi ini."*
-- **AC-PATH-01-A (Menu Name):** Nama label tab di bilah navigasi bawah wajib menampilkan teks **"Path"**.
-- **AC-PATH-01-B (Header Layout):** Header halaman Path wajib menampilkan:
-  - Sisi kiri: Dropdown pemilih bahasa aktif dengan nama dan ikon bahasa yang terpilih.
-  - Sisi kanan: Tiga pill berurutan (kiri ke kanan): Streak 🔥 + angka, Energi ⚡ + nilai/`∞`, XP ⭐ + total.
-  - Header sticky: tetap terlihat saat pengguna scroll ke bawah.
-- **AC-PATH-01-C (Language Isolation):** Saat pengguna mengganti bahasa di dropdown:
-  - Halaman Path wajib me-render ulang struktur Bagian/Unit/Node sesuai bahasa yang dipilih.
-  - Data progres yang ditampilkan harus milik path bahasa tersebut, bukan bahasa lain.
-- **AC-PATH-01-D (Section & Unit Banners):** Sistem wajib merender banner Bagian (*Section divider*) dan banner Unit secara terpisah di halaman Path. Banner Bagian muncul sebelum Unit pertama dari Bagian tersebut.
+- **AC-PATH-01-A (Menu Name):** Nama label tab di bilah navigasi bawah wajib menampilkan teks **"Rute"**.
+- **AC-PATH-01-B (Header Layout):** Header halaman Rute wajib menampilkan:
+  - Sisi kiri: Judul menu **"Rute"** bersanding langsung dengan **Dropdown Pemilih Dialek** aktif (misal: `Rute [Mesir 🇪🇬 ▾]`). Format antarmuka wajib berbentuk **Dropdown** baik pada layar desktop maupun mobile.
+  - Sisi kanan: Tiga pill status pembelajaran berurutan (kiri ke kanan): Streak 🔥 + angka, Energi ⚡ + nilai/`∞`, XP ⭐ + total poin.
+  - Header sticky: tetap terlihat dan persisten saat pengguna scroll ke bawah.
+- **AC-PATH-01-C (Dialect Isolation):** Saat pengguna mengganti dialek/bahasa di dropdown:
+  - Halaman Rute wajib me-render ulang struktur Bagian/Unit/Node sesuai dialek yang dipilih.
+  - Data progres yang ditampilkan harus milik rute dialek tersebut, tidak tercampur dengan dialek lain.
+- **AC-PATH-01-D (Section & Unit Banners):** Sistem wajib merender banner Bagian (*Section divider*) dan banner Unit secara terpisah di halaman Rute. Banner Bagian muncul sebelum Unit pertama dari Bagian tersebut.
 - **AC-PATH-01-E (Visual Layout):** Sistem wajib merender tata letak pohon kurikulum berurutan dari atas ke bawah dengan posisi horizontal zig-zag yang proporsional pada resolusi mobile (360px–430px).
 - **AC-PATH-01-F (Node States):** Setiap node wajib mencerminkan satu dari tiga status valid:
   - `COMPLETED`: Lingkaran penuh warna Dialect Blue (`#51A2FF`), ikon centang putih, dapat diklik untuk sesi latihan ulang (+5 XP).
-  - `CURRENT`: Lingkaran warna Warm Orange (`#FF8904`), beranimasi denyut (*pulsing halo*), tooltip "Mulai!", dapat diklik untuk memulai sesi baru.
+  - `CURRENT`: Lingkaran warna Warm Orange (`#FF8904`), beranimasi denyut (*pulsing halo*), tooltip "Mulai!", dapat diklik untuk memulai sesi baru (+10 XP).
   - `LOCKED`: Lingkaran abu-abu `#D1D5DB`, ikon gembok `#9CA3AF`, tidak dapat diklik untuk memulai sesi baru.
 - **AC-PATH-01-G (Node Type Badges):** Node pertama tiap Unit wajib memiliki badge "Kosa Kata" (Vocabulary Lesson). Node terakhir tiap Unit wajib memiliki badge "Exercise". Badge ini tampil di atas lingkaran node.
 - **AC-PATH-01-H (Locked Click Feedback):** Jika pengguna mengetuk node berstatus `LOCKED`, sistem wajib memunculkan animasi goyang (*shake animation*) pada gembok disertai pesan toast: *"Selesaikan pelajaran sebelumnya terlebih dahulu untuk membuka kunci materi ini."*
-- **AC-PATH-01-I (Auto-scroll to Active):** Posisi scroll viewport halaman Path wajib otomatis memusatkan tampilan (*auto-scroll into view*) ke node berstatus `CURRENT` saat halaman pertama kali dimuat.
+- **AC-PATH-01-I (Auto-scroll to Active):** Posisi scroll viewport halaman Rute wajib otomatis memusatkan tampilan (*auto-scroll into view*) ke node berstatus `CURRENT` saat halaman pertama kali dimuat.
 
 #### UI Specification Table
 
 | UI Component | Spec / Token | Visual State | Interaction Behavior |
 | :--- | :--- | :--- | :--- |
-| **Path Header** | Height: `56px`, Bg: `#FFFFFF` atau surface token, Border bottom: `1px solid #F3F4F6`, Sticky | Sticky saat scroll | Kiri: Dropdown bahasa; Kanan: Pill Streak, Energi, XP |
-| **Language Dropdown** | Pill kiri, Bg: `#FFF7ED`, Border: `#FFEDD5`, Radius: `9999px`, Text: Fredoka Medium `14px`, Ikon: Bendera/bahasa | Aktif / Terpilih | Mengetuk membuka bottom sheet daftar bahasa; pergantian bahasa memuat ulang Path |
+| **Rute Header** | Height: `56px`, Bg: `#FFFFFF` atau surface token, Border bottom: `1px solid #F3F4F6`, Sticky | Sticky saat scroll | Kiri: Judul "Rute" + Dropdown dialek `[Mesir 🇪🇬 ▾]`; Kanan: Pill Streak 🔥, Energi ⚡, XP ⭐ |
+| **Dialect Dropdown** | Pill trigger di samping judul "Rute", Bg: `#FFF7ED`, Border: `#FFEDD5`, Radius: `9999px`, Text: Fredoka Medium `14px` | Aktif / Terpilih | Mengetuk membuka menu dropdown daftar dialek (Desktop & Mobile); pergantian dialek memuat ulang Rute |
 | **Section Divider Banner** | Full-width, Bg: `#F9FAFB`, Border top/bottom `1px solid #E5E7EB`, Text: Fredoka SemiBold `13px` UPPERCASE, Color: `#6B7280` | Standar | Pemisah visual antar Bagian di scroll path |
 | **Unit Banner Card** | Bg: `#FF8904`, Radius: `16px`, Padding: `16px`, Text: Fredoka Bold | Standar | Sticky saat scroll melewati unit, memuat judul unit, dialek target, dan indikator progres unit |
 | **Active Node Button** | Diameter: `68px`, Bg: `#FF8904`, Border bottom: `4px solid #D67000` (3D Button Dhou), Radius: `9999px` | Current (Pulsing) | Animasi *scale 0.96* saat disentuh, membuka modal dialog pra-sesi kuis |
@@ -611,43 +607,42 @@ flowchart TD
 
 ---
 
-### US-PATH-08: Header Path & Isolasi Jalur Belajar per Bahasa
+### US-PATH-08: Header Rute & Isolasi Jalur Belajar per Dialek
 
 | Attribute | Specification |
 | :--- | :--- |
 | **User Story ID** | US-PATH-08 |
 | **Feature ID** | PATH-L-H, PATH-L-00 |
-| **Title** | Path Header with Language Switcher & Per-Language Path Isolation |
+| **Title** | Rute Header with Language Dropdown & Per-Dialect Route Isolation |
 | **Priority** | Critical (P0) |
-| **Description** | Sebagai pengguna Dhou yang mempelajari lebih dari satu ragam bahasa Arab, saya ingin dapat memilih bahasa yang ingin saya pelajari via dropdown di header halaman Path, dan jalur belajar yang ditampilkan harus sepenuhnya terpisah per bahasa — sehingga progres Fusha saya tidak tercampur dengan 'Ammiyyah, dan sebaliknya. |
+| **Description** | Sebagai pengguna Dhou yang mempelajari lebih dari satu ragam bahasa Arab, saya ingin dapat memilih dialek yang ingin saya pelajari via dropdown di header samping judul halaman Rute, dan jalur belajar yang ditampilkan harus sepenuhnya terpisah per dialek — sehingga progres Fusha saya tidak tercampur dengan 'Ammiyyah Mesir, dan sebaliknya. |
 
 #### User Journey
-1. Pengguna membuka tab **"Path"** di navigasi bawah. Header muncul dengan bahasa yang terakhir dipilih (atau bahasa default: *Fusha*).
-2. Di sisi kiri header, Dropdown Bahasa menampilkan nama bahasa aktif: *"Fusha (الفصحى)"*.
-3. Di sisi kanan header, tiga pill berurutan tampil: 🔥 `4` (streak hari ini), ⚡ `∞` (energi MVP), ⭐ `1.250` (total XP).
-4. Pengguna mengetuk dropdown bahasa. Bottom sheet daftar bahasa terbuka, menampilkan bahasa-bahasa yang tersedia: Fusha, 'Ammiyyah Mesir, 'Ammiyyah Syam, dsb. (bahasa yang belum tersedia dinonaktifkan/greyed out dengan label "Segera Hadir").
+1. Pengguna membuka tab **"Rute"** di navigasi bawah. Header muncul dengan judul **"Rute"** dan dropdown dialek di sampingnya (menampilkan dialek terakhir dipilih atau default: *Fusha*).
+2. Di sisi kiri header, tampil kombinasi judul dan Dropdown Dialek: `Rute [Mesir 🇪🇬 ▾]`.
+3. Di sisi kanan header, tiga pill status pembelajaran tampil berurutan: 🔥 `3` (streak hari ini), ⚡ `∞` (energi MVP), ⭐ `150` (total XP).
+4. Pengguna mengetuk dropdown dialek. Menu dropdown terbuka (berlaku seragam baik di desktop maupun mobile), menampilkan pilihan dialek yang tersedia: Fusha, 'Ammiyyah Mesir, 'Ammiyyah Syam (dialek yang belum tersedia dinonaktifkan/greyed out dengan label "Segera Hadir").
 5. Pengguna memilih *"'Ammiyyah Mesir (مصري)"*.
-6. Bottom sheet tertutup. Header diperbarui: Dropdown kini menampilkan "'Ammiyyah Mesir". Path di bawahnya me-render ulang struktur Bagian/Unit/Node khusus untuk 'Ammiyyah Mesir, dengan data progres yang berbeda dari Fusha.
+6. Menu dropdown tertutup. Header diperbarui menampilkan `Rute [Mesir 🇪🇬 ▾]`. Rute di bawahnya me-render ulang struktur Bagian/Unit/Node khusus untuk 'Ammiyyah Mesir, dengan data progres yang berbeda dari Fusha.
 7. Pengguna scroll ke bawah. Header tetap terlihat (sticky).
 
 #### Acceptance Criteria
-- **AC-PATH-08-A (Tab Name):** Label tab di bilah navigasi bawah wajib terbaca **"Path"**.
-- **AC-PATH-08-B (Header Persistence):** Header wajib sticky — tetap terlihat di bagian atas saat pengguna melakukan scroll ke bawah halaman Path.
-- **AC-PATH-08-C (Dropdown Content):** Bottom sheet daftar bahasa wajib memuat seluruh bahasa yang didukung Dhou. Bahasa belum tersedia ditampilkan dengan state `disabled` dan label "Segera Hadir".
-- **AC-PATH-08-D (Language Switch Effect):** Saat pengguna memilih bahasa berbeda, halaman Path wajib:
-  1. Mengambil data Path dari bahasa baru via API (`GET /api/v1/paths?language=:langCode`).
-  2. Me-render ulang seluruh struktur Bagian/Unit/Node sesuai bahasa baru.
-  3. Menampilkan progres pengguna yang spesifik untuk bahasa baru tersebut.
+- **AC-PATH-08-A (Tab Name):** Label tab di bilah navigasi bawah wajib terbaca **"Rute"**.
+- **AC-PATH-08-B (Header Persistence):** Header wajib sticky — tetap terlihat di bagian atas saat pengguna melakukan scroll ke bawah halaman Rute.
+- **AC-PATH-08-C (Dropdown UI on Desktop & Mobile):** Komponen pemilih dialek wajib berwujud **Dropdown UI** yang seragam baik di platform desktop maupun mobile, diposisikan tepat di samping judul menu "Rute" pada sisi kiri.
+- **AC-PATH-08-D (Language Switch Effect):** Saat pengguna memilih dialek berbeda, halaman Rute wajib:
+  1. Mengambil data Rute dari dialek baru via API (`GET /api/v1/paths?language=:langCode`).
+  2. Me-render ulang seluruh struktur Bagian/Unit/Node sesuai dialek baru.
+  3. Menampilkan progres pengguna yang spesifik untuk dialek baru tersebut.
 - **AC-PATH-08-E (Data Isolation):** Backend wajib menyimpan progres node per kombinasi `(user_id, language_code)`. Query progres tidak boleh menggabungkan data lintas `language_code` yang berbeda.
-- **AC-PATH-08-F (Header Right Pills):** Tiga pill di sisi kanan header wajib selalu menampilkan: Streak aktual hari ini, Energi aktual (atau `∞` di MVP), dan Total XP akumulatif pengguna.
+- **AC-PATH-08-F (Header Right Pills):** Tiga pill di sisi kanan header wajib selalu menampilkan: Streak aktual hari ini (`🔥`), Energi aktual (`⚡ ∞` di MVP), dan Total XP akumulatif pengguna (`⭐`).
 
 #### UI Specification Table
 
 | UI Component | Spec / Token | Visual State | Interaction Behavior |
 | :--- | :--- | :--- | :--- |
-| **Path Header Container** | Height: `56px`, Bg: Surface/White, Shadow bottom `0 1px 0 #F3F4F6`, Sticky z-index: `50` | Sticky saat scroll | Container flex row: justify-between, align-center |
-| **Language Dropdown Trigger** | Pill, Bg: `#FFF7ED`, Border: `1px solid #FFEDD5`, Padding: `8px 12px`, Radius: `9999px`, Max-width: `160px` | Default / Focused | Teks nama bahasa aktif + chevron down; tap membuka Language Bottom Sheet |
-| **Language Bottom Sheet** | Modal bottom sheet, max-height: `60vh`, Radius top: `24px`, Bg: White | Pop-up dari bawah | Daftar bahasa dalam list; item disabled greyed out + label badge "Segera Hadir" |
+| **Rute Header Container** | Height: `56px`, Bg: Surface/White, Shadow bottom `0 1px 0 #F3F4F6`, Sticky z-index: `50` | Sticky saat scroll | Container flex row: justify-between, align-center |
+| **Title + Dialect Dropdown** | Flex row gap: `8px`, align-items: `center` di sisi kiri. Judul: Fredoka Bold `18px`, Dropdown pill: Bg `#FFF7ED`, Border `1px solid #FFEDD5`, Radius `9999px`, Padding `6px 12px` | Default / Opened | Mengetuk membuka menu dropdown daftar dialek (Desktop & Mobile) |
 | **Streak Pill** | Bg: `#FFF7ED`, Border: `#FFEDD5`, Radius: `9999px`, Padding: `6px 10px` | Active (Orange) / Inactive (Gray) | Ikon 🔥 + angka streak; tap membuka modal streak |
 | **Energy Pill** | Bg: `#F0FDF4`, Border: `#BBF7D0`, Radius: `9999px`, Padding: `6px 10px` | Unlimited (∞) / Normal | Ikon ⚡ + angka atau `∞`; tap membuka modal info energi |
 | **XP Pill** | Bg: `#FFFBEB`, Border: `#FDE68A`, Radius: `9999px`, Padding: `6px 10px` | Standar | Ikon ⭐ + total XP; tap membuka modal riwayat XP |
@@ -720,10 +715,10 @@ flowchart TD
 
 | Rule ID | Domain | Aturan Bisnis | Konsekuensi Pelanggaran / Sistem |
 | :--- | :--- | :--- | :--- |
-| **RL-MN-01** | Nama Menu | Tab modul pembelajaran di navigasi bawah wajib bernama **"Path"**. | Label selain "Path" dianggap inkonsistensi produk dan harus dikoreksi sebelum rilis. |
-| **RL-LG-01** | Isolasi Bahasa | Setiap bahasa memiliki data Path, Bagian, Unit, Lesson, dan rekam progres yang terpisah penuh. Data lintas bahasa tidak pernah tercampur dalam satu tampilan atau query. | Backend dilarang menggabungkan `user_node_progress` dari `language_code` berbeda dalam satu response API. |
-| **RL-LG-02** | Switching Bahasa | Mengganti bahasa di dropdown header memuat ulang Path sesuai bahasa baru. Progres bahasa lama tidak terdampak dan tersimpan. | Tidak ada data progres yang dihapus atau di-reset saat pengguna berpindah bahasa. |
-| **RL-HD-01** | Header Path | Header halaman Path wajib menampilkan: sisi kiri = dropdown bahasa aktif, sisi kanan = Streak 🔥 + Energi ⚡ + XP ⭐. Header bersifat sticky. | Header yang tidak memuat dropdown bahasa atau pill indikator dianggap belum memenuhi spesifikasi. |
+| **RL-MN-01** | Nama Menu | Tab modul pembelajaran di navigasi bawah wajib bernama **"Rute"** (bukan "Belajar" atau "Path"). | Label selain "Rute" dianggap inkonsistensi produk dan harus dikoreksi sebelum rilis. |
+| **RL-LG-01** | Isolasi Bahasa | Setiap bahasa memiliki data Path/Rute, Bagian, Unit, Lesson, dan rekam progres yang terpisah penuh. Data lintas bahasa tidak pernah tercampur dalam satu tampilan atau query. | Backend dilarang menggabungkan `user_node_progress` dari `language_code` berbeda dalam satu response API. |
+| **RL-LG-02** | Switching Bahasa | Mengganti bahasa di dropdown header memuat ulang Rute sesuai dialek baru. Progres dialek lama tidak terdampak dan tersimpan. | Tidak ada data progres yang dihapus atau di-reset saat pengguna berpindah bahasa. |
+| **RL-HD-01** | Header Rute | Header halaman Rute wajib menampilkan: sisi kiri = judul "Rute" bersanding dengan Dropdown dialek (`Rute [Mesir 🇪🇬 ▾]`), sisi kanan = Streak 🔥 + Energi ⚡ + XP ⭐. Dropdown wajib seragam di desktop dan mobile. Header bersifat sticky. | Header yang tidak memuat dropdown dialek di samping judul atau pill indikator dianggap belum memenuhi spesifikasi. |
 | **RL-STR-01** | Komposisi Unit | Setiap Unit wajib terdiri dari minimal 3 Lesson (termasuk Vocab Lesson) + 1 Exercise di akhir. | Unit dengan <3 Lesson atau tanpa Exercise tidak boleh dipublish ke pengguna. |
 | **RL-STR-02** | Urutan Node Unit | Urutan wajib: Node pertama = Vocab Lesson, Node terakhir = Exercise, Lesson latihan di antaranya. Urutan ini tidak bisa diubah. | Node Exercise tidak dapat diletakkan selain di posisi terakhir Unit. |
 | **RL-STR-03** | Komposisi Bagian | Setiap Bagian wajib memiliki minimal 2 Unit. | Bagian dengan 1 Unit tidak boleh dipublish. |
