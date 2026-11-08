@@ -39,22 +39,24 @@ PRD3 memegang otoritas atas alur pengguna, intensi pedagogis, dan logika bisnis.
 ## 2. Scope and Source Reconciliation
 
 ### 2.1 Rekonsiliasi Ruang Lingkup Teknis
-1. **Pustaka & Filter Dialek (FR-VID-01)**: Penyajian feed video berkartu terkurasi dengan filter berbasis dialek (`fusha`, `egyptian`, `levantine`), pagination berbasis cursor, dan pemetaan badge visual.
-2. **Mesin Pemutar Video & Kontrol Subtitle (FR-VID-02)**: Custom HTML5 Video Player dengan toggle independen dual-subtitle (Arab harakat RTL & Terjemahan ID), serta kontrol playback rate (0.75x, 0.9x, 1.0x) dengan fitur preservasi nada suara (*pitch correction*).
-3. **Sinkronisasi Transkrip & Navigasi Kalimat (FR-VID-03)**: Engine pemetaan timestamp presisi tinggi ($<100\text{ ms}$) antara `currentTime` video dan array kalimat, fitur auto-scroll cerdas dengan penangguhan manual scroll (4 detik), dan fungsi *Sentence Replay*.
-4. **Latihan Shadowing & Audio Player Berdampingan (FR-VID-04)**: Mesin perekam suara lokal berbasis Web MediaRecorder API / Capacitor Microphone, penyimpanan audio sementara di memori browser (*blob URL*), batas durasi dinamis ($\min(15\text{s}, 1.5\times\text{durasi})$), dan kontrol *Record-and-Compare*.
+1. **Pustaka Video & Filter Dialek dengan Header Statistik (FR-VID-01)**: Penyajian feed video berkartu terkurasi dengan bilah header atas yang memuat 3 pill statistik global (Streak 🔥, Energi ⚡, XP ⭐) dan tombol koleksi video tersimpan (🔖). Pemilihan dialek di menu Video dioperasikan melalui filter pill horizontal (`[Semua]`, `[Fusha]`, `[Mesir]`, `[Syam]`).
+2. **Mesin Pemutar Video & Kontrol Subtitle (FR-VID-02)**: Custom HTML5 Video Player dengan toggle independen dual-subtitle (Arab harakat RTL & Terjemahan ID), kontrol playback rate (0.75x, 0.9x, 1.0x), serta tombol simpan video cepat di header pemutar.
+3. **Sinkronisasi Transkrip, Navigasi Kalimat & Simpan Idiom (FR-VID-03)**: Engine pemetaan timestamp presisi tinggi ($<100\text{ ms}$) antara `currentTime` video dan array kalimat, fitur auto-scroll cerdas dengan penangguhan manual scroll (4 detik), fungsi *Sentence Replay*, serta tombol simpan idiom (🔖) langsung dari baris transkrip.
+4. **Latihan Shadowing & Indikator Status Pengerjaan (FR-VID-04)**: Mesin perekam suara lokal berbasis Web MediaRecorder API / Capacitor Microphone, penyimpanan audio sementara di memori browser (*blob URL*), batas durasi dinamis, kontrol *Record-and-Compare*, dan **pencatatan status pengerjaan selesai (`is_shadowed: true`)** yang memicu badge visual hijau `[✓ Selesai]`.
 5. **Kamus Mini & Ekstraksi Kata ke Modul Review (FR-VID-05)**: Pembagian token kata Arab pada transkrip (`word segmentation`), drawer definisi instan, mutasi penyimpanan kata (*bookmark*) ke tabel review dengan penanganan deduplikasi (*upsert*).
+6. **Penyimpanan Video Favorit & Manajemen Koleksi (FR-VID-06)**: Mekanisme bookmark video pada feed dan pemutar video ke tabel `saved_videos`, disertai drawer/halaman khusus untuk melihat riwayat video tersimpan.
 
 ### 2.2 Traceability Matrix (PRD3 $\rightarrow$ FRD3)
 
 | PRD3 Source Trace | FRD ID | Operation ID | Frontend Integration Target | Test Scenario ID |
 | :--- | :--- | :--- | :--- | :--- |
-| US-VID-01; AC-VID-01-A..C; RL-VD-01 | **FR-VID-01** | `video_get_feed` | `VideoFeedCatalog`, `DialectFilterBar`, `VideoFeedCard` | T-VID-01, 02 |
-| US-VID-02; AC-VID-02-A..C; RL-VD-02 | **FR-VID-02** | `video_get_detail` | `CustomVideoPlayer`, `SubtitleOverlay`, `SpeedControlBar` | T-VID-03, 04, 05 |
-| US-VID-03; AC-VID-03-A..C; | **FR-VID-03** | `video_sync_transcript`| `InteractiveTranscript`, `SentenceRow`, `ReplayButton` | T-VID-06, 07 |
-| US-VID-04; AC-VID-04-A..D; RL-VD-03..04 | **FR-VID-04** | `video_shadowing_record`| `ShadowingModal`, `AudioCompareBar`, `MicRecordButton` | T-VID-08, 09, 10 |
+| US-VID-01; AC-VID-01-A..E; RL-VD-01, 08 | **FR-VID-01** | `video_get_feed` | `VideoFeedCatalog`, `GlobalStatsHeader`, `DialectPillBar`, `VideoFeedCard` | T-VID-01, 02, 16 |
+| US-VID-02; AC-VID-02-A..C; RL-VD-02 | **FR-VID-02** | `video_get_detail` | `CustomVideoPlayer`, `SubtitleOverlay`, `SpeedControlBar`, `VideoBookmarkHeaderBtn` | T-VID-03, 04, 05 |
+| US-VID-03; AC-VID-03-A..D; RL-VD-05 | **FR-VID-03** | `video_sync_transcript`, `video_save_idiom` | `InteractiveTranscript`, `SentenceRow`, `ReplayButton`, `SaveIdiomSentenceBtn` | T-VID-06, 07, 17 |
+| US-VID-04; AC-VID-04-A..E; RL-VD-03, 04, 07 | **FR-VID-04** | `video_shadowing_record`, `video_mark_shadowed` | `ShadowingModal`, `AudioCompareBar`, `MicRecordButton`, `ShadowingDoneBadge` | T-VID-08, 09, 10, 18 |
 | US-VID-05; AC-VID-05-A..C; RL-VD-05 | **FR-VID-05** | `video_save_word`, `video_remove_word` | `WordDefinitionDrawer`, `BookmarkActionBtn`, `ReviewSync` | T-VID-11, 12 |
-| Scope 4.1; RL-VD-06 | **FR-VID-06** | `video_track_progress` | `VideoProgressTracker`, `WatchedProgressBar` | T-VID-13, 14, 15 |
+| US-VID-06; AC-VID-06-A..C; | **FR-VID-06** | `video_save_video`, `video_list_saved` | `SavedVideosDrawer`, `VideoCardBookmarkBtn` | T-VID-19, 20 |
+| Scope 4.1; RL-VD-06 | **FR-VID-07** | `video_track_progress` | `VideoProgressTracker`, `WatchedProgressBar` | T-VID-13, 14, 15 |
 
 ---
 
@@ -62,7 +64,7 @@ PRD3 memegang otoritas atas alur pengguna, intensi pedagogis, dan logika bisnis.
 
 | Aktor | Hak Akses Baca (*Read*) | Hak Akses Mutasi (*Write*) | Batasan Keamanan (*Scope & Security*) |
 | :--- | :--- | :--- | :--- |
-| **Authenticated User** | Katalog video, metadata transkrip lengkap, leksikon kata, status progress & bookmark miliknya | Simpan/hapus kata review, update watch progress video | Header `Authorization: Bearer <JWT>` wajib ada. RLS Supabase memastikan user hanya dapat memutasi data bookmark dan progress miliknya sendiri. |
+| **Authenticated User** | Katalog video, metadata transkrip lengkap, leksikon kata, status progress, saved videos & bookmark miliknya | Simpan/hapus video favorit, simpan/hapus kata review, simpan idiom, update progress video | Header `Authorization: Bearer <JWT>` wajib ada. RLS Supabase memastikan user hanya dapat memutasi data bookmark dan progress miliknya sendiri. |
 | **Guest / Anonymous User**| Menonton preview video publik (1 video per dialek) | Tidak ada mutasi diizinkan | Dibatasi secara middleware; diarahkan untuk register/login jika ingin bookmark atau latihan shadowing. |
 | **Content Curator / Admin**| Seluruh video & metadata transkrip | CRUD master video, upload transkrip, verifikasi harakat | Dilindungi role `role = 'admin'` di Supabase auth metadata. |
 
@@ -70,37 +72,44 @@ PRD3 memegang otoritas atas alur pengguna, intensi pedagogis, dan logika bisnis.
 
 ## 4. Functional Requirements
 
-### 4.1 FR-VID-01 — Feed Video & Penyaringan Dialek
-- **FR-VID-01.1**: Endpoint `GET /api/v1/videos` wajib mendukung query parameter `dialect` (`all`, `fusha`, `egyptian`, `levantine`), `level` (`all`, `beginner`, `intermediate`), `limit`, dan `cursor`.
-- **FR-VID-01.2**: Respons feed menyertakan metadata inti: `id`, `title_id`, `title_ar`, `dialect`, `level`, `duration_seconds`, `thumbnail_url`, dan `video_url`.
-- **FR-VID-01.3**: Frontend mengimplementasikan *client-side caching* (SWR / React Query) dengan durasi revalidasi minimal 5 menit untuk menghemat beban server.
+### 4.1 FR-VID-01 — Feed Video, Header Statistik & Filter Dialek
+- **FR-VID-01.1**: Header awal screen Video menampilkan komponen `GlobalStatsHeader` yang merender 3 pill statistik persisten: Api Streak (`🔥`), Energi (`⚡`), dan XP (`⭐`), serta tombol navigasi menuju koleksi video tersimpan (`🔖`).
+- **FR-VID-01.2**: Tepat di bawah header, terdapat deretan tombol filter dialek berbentuk pill horizontal (`[Semua]`, `[Fusha]`, `[Mesir]`, `[Syam]`). Memilih filter memperbarui state `selected_dialect` tanpa reload halaman.
+- **FR-VID-01.3**: Endpoint `GET /api/v1/videos` mendukung query parameter `dialect` (`all`, `fusha`, `egyptian`, `levantine`), `level` (`all`, `beginner`, `intermediate`), `limit`, dan `cursor`.
+- **FR-VID-01.4**: Respons feed menyertakan metadata inti: `id`, `title_id`, `title_ar`, `dialect`, `level`, `duration_seconds`, `thumbnail_url`, `video_url`, `is_saved`, dan `is_watched`.
 
 ### 4.2 FR-VID-02 — Pemutar Video Kustom & Subtitle Dwibahasa
-- **FR-VID-02.1**: Video dirender menggunakan elemen `<video>` native HTML5 dengan konfigurasi `playsInline`, `preload="metadata"`, dan `controls={false}` (menggunakan kustom kontrol Dhou).
+- **FR-VID-02.1**: Video dirender menggunakan elemen `<video>` native HTML5 dengan konfigurasi `playsInline`, `preload="metadata"`, dan `controls={false}`.
 - **FR-VID-02.2**: Subtitle Arab dirender menggunakan teks HTML berorientasi RTL (`dir="rtl"`), font *Amiri*, ukuran font minimum `20px`, harakat lengkap, dengan pembungkus latar hitam transparan `rgba(0, 0, 0, 0.7)`.
-- **FR-VID-02.3**: Toggle subtitle Arab dan terjemahan Indonesia disimpan dalam *local storage* pengguna (`dhou_sub_arabic_pref` dan `dhou_sub_translation_pref`) agar preferensi bertahan antar-sesi video.
-- **FR-VID-02.4**: Mengubah kecepatan putar memodifikasi properti `HTMLMediaElement.playbackRate` langsung ke nilai `0.75`, `0.9`, atau `1.0`. Properti `preservesPitch` disetel `true` untuk mencegah perubahan pitch suara secara janggal.
+- **FR-VID-02.3**: Toggle subtitle Arab dan terjemahan Indonesia disimpan dalam *local storage* pengguna (`dhou_sub_arabic_pref` dan `dhou_sub_translation_pref`).
+- **FR-VID-02.4**: Mengubah kecepatan putar memodifikasi properti `HTMLMediaElement.playbackRate` langsung ke nilai `0.75`, `0.9`, atau `1.0` dengan `preservesPitch = true`.
+- **FR-VID-02.5**: Header pemutar video menyediakan tombol cepat `VideoBookmarkHeaderBtn` (🔖) untuk menyimpan/membatalkan simpanan video.
 
-### 4.3 FR-VID-03 — Transkrip Interaktif Berstempel Waktu & Sentence Replay
+### 4.3 FR-VID-03 — Transkrip Interaktif, Sentence Replay & Simpan Idiom
 - **FR-VID-03.1**: Setiap video memiliki koleksi baris kalimat (`video_sentences`) dengan stempel waktu presisi milidetik: `start_time_ms` dan `end_time_ms`.
 - **FR-VID-03.2**: Event listener `timeupdate` pada pemutar video membandingkan `currentTime * 1000` dengan interval `[start_time_ms, end_time_ms]` setiap kalimat untuk menentukan kalimat aktif (`active_sentence_id`).
 - **FR-VID-03.3**: Mengetuk baris kalimat manapun memicu pemanggilan `videoRef.current.currentTime = sentence.start_time_ms / 1000` dan otomatis mengeksekusi `videoRef.current.play()`.
-- **FR-VID-03.4**: Fitur **Sentence Replay (🔁)** memutar rentang satu kalimat saja: saat `currentTime * 1000 >= sentence.end_time_ms`, pemutar otomatis memanggil `videoRef.current.pause()` dan mengembalikan posisi ke `start_time_ms`.
+- **FR-VID-03.4**: Fitur **Sentence Replay (🔁)** memutar rentang satu kalimat saja dan menjeda otomatis saat mencapai `end_time_ms`.
+- **FR-VID-03.5**: Setiap baris kalimat menyediakan tombol **Simpan Idiom (🔖)**. Mengetuk tombol ini memanggil endpoint penyimpanan idiom (`POST /api/v1/speaking/chat/save-idiom` atau `/api/v1/videos/:id/save-idiom`) yang menambahkan kalimat ke koleksi `saved_idioms` (menghormati kuota 20 idiom), disertai perubahan tombol menjadi *"Tersimpan ✓"* berwarna amber Dhou.
 
-### 4.4 FR-VID-04 — Latihan Shadowing & Audio Player Berdampingan
-- **FR-VID-04.1**: Membuka modal shadowing memicu inisialisasi perekam suara `navigator.mediaDevices.getUserMedia({ audio: true })` atau plugin `@capacitor/voice-recorder` jika berjalan di native iOS.
-- **FR-VID-04.2**: Rekaman audio disimpan dalam format `Blob` audio lokal di memori klien dengan MIME type yang didukung perangkat (`audio/webm;codecs=opus` di Chrome/Android, atau `audio/mp4` / `audio/aac` di Safari/iOS).
-- **FR-VID-04.3**: Sistem menghitung durasi rekam maksimal $\text{max\_record\_ms} = \min(15000, 1.5 \times (\text{end\_time\_ms} - \text{start\_time\_ms}))$. Timer otomatis memanggil `mediaRecorder.stop()` saat batas waktu tercapai.
-- **FR-VID-04.4**: Layar menyajikan dua kontrol pemutar audio:
-  1. *Player Suara Asli*: Memutar audio dari file video pada rentang kalimat terpilih.
-  2. *Player Suara Saya*: Memutar audio dari `URL.createObjectURL(recordedBlob)`.
-- **FR-VID-04.5**: Menjalankan salah satu pemutar audio otomatis menghentikan (*stop & rewind*) pemutar audio lainnya untuk menghindari distorsi pendengaran.
+### 4.4 FR-VID-04 — Latihan Shadowing & Indikator Status Pengerjaan
+- **FR-VID-04.1**: Membuka modal shadowing memicu inisialisasi perekam suara `navigator.mediaDevices.getUserMedia({ audio: true })` atau plugin `@capacitor/voice-recorder`.
+- **FR-VID-04.2**: Rekaman audio disimpan dalam format `Blob` audio lokal di memori klien dengan MIME type yang didukung perangkat (`audio/webm` atau `audio/m4a`).
+- **FR-VID-04.3**: Durasi rekam maksimal $\text{max\_record\_ms} = \min(15000, 1.5 \times (\text{end\_time\_ms} - \text{start\_time\_ms}))$. Timer otomatis memanggil `mediaRecorder.stop()` saat batas waktu tercapai.
+- **FR-VID-04.4**: Layar menyajikan dua kontrol pemutar audio berdampingan: *Player Suara Asli* dan *Player Suara Saya*. Menjalankan salah satu pemutar otomatis menghentikan pemutar lainnya.
+- **FR-VID-04.5**: Setelah pengguna menyelesaikan perekaman minimal 1 kali putaran, sistem menetapkan status kalimat sebagai selesai (`is_shadowed: true`) pada state sesi klien.
+- **FR-VID-04.6**: Baris transkrip kalimat terkait otomatis memperbarui tombol rekam menjadi lencana centang hijau `[✓ Selesai]` (`ShadowingDoneBadge`), serta menambahkan angka progres header transkrip (`Shadowing: X/Y Selesai`). Pengguna tetap dapat mengetuk kembali lencana tersebut jika ingin berlatih ulang.
 
 ### 4.5 FR-VID-05 — Kamus Mini Kata Arab & Bookmark Review
 - **FR-VID-05.1**: Setiap kalimat pada transkrip dipecah menjadi array objek token kata (`video_sentence_words`) yang memuat `id`, `word_ar`, `transliteration`, `translation_id`, dan `root_word`.
 - **FR-VID-05.2**: Mengetuk token kata memicu pembukaan `WordDefinitionDrawer` dan otomatis menghentikan sementara pemutaran video (`videoRef.current.pause()`).
 - **FR-VID-05.3**: Menekan tombol 🔖 **"Simpan ke Review"** memanggil `POST /api/v1/videos/:id/save-word`. Sistem melakukan *optimistic UI update* (ikon langsung berubah hijau "Tersimpan ✓") dan getaran haptic sukses via `@capacitor/haptics`.
 - **FR-VID-05.4**: Menghapus kata dari daftar bookmark memanggil `DELETE /api/v1/videos/:id/save-word/:wordId` dan mengembalikan tombol ke status semula.
+
+### 4.6 FR-VID-06 — Penyimpanan Video Favorit (Saved Videos)
+- **FR-VID-06.1**: Endpoint `POST /api/v1/videos/:id/save-video` menambahkan relasi `(user_id, video_id)` ke tabel `public.saved_videos`.
+- **FR-VID-06.2**: Endpoint `DELETE /api/v1/videos/:id/save-video` menghapus video dari koleksi tersimpan.
+- **FR-VID-06.3**: Endpoint `GET /api/v1/videos/saved` mengembalikan daftar video yang telah disimpan oleh pengguna, mendukung filter dialek yang sama.
 
 ---
 
@@ -281,14 +290,114 @@ PRD3 memegang otoritas atas alur pengguna, intensi pedagogis, dan logika bisnis.
 
 ---
 
-### 5.6 Tabel Ringkasan Kode Error HTTP
+### 5.6 Toggle Simpan Video (Save / Bookmark Video)
+- **HTTP Method & Path**: `POST /api/v1/videos/:id/save`
+- **Headers**: `Authorization: Bearer <token>`
+- **Request Body**: None (toggle endpoint atau idempotent create)
+- **Respons Sukses (200 OK / 201 Created)**:
+```json
+{
+  "success": true,
+  "data": {
+    "video_id": "vid-101-egyptian-cafe",
+    "is_saved": true,
+    "saved_at": "2026-11-08T20:50:00Z"
+  }
+}
+```
+- **HTTP Method & Path (Unsave)**: `DELETE /api/v1/videos/:id/save`
+- **Respons Sukses (200 OK)**:
+```json
+{
+  "success": true,
+  "data": {
+    "video_id": "vid-101-egyptian-cafe",
+    "is_saved": false
+  }
+}
+```
+
+---
+
+### 5.7 Ambil Daftar Video Tersimpan (Get Saved Videos)
+- **HTTP Method & Path**: `GET /api/v1/videos/saved`
+- **Headers**: `Authorization: Bearer <token>`
+- **Respons Sukses (200 OK)**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "vid-101-egyptian-cafe",
+      "title_id": "Pesan Kopi di Kairo",
+      "title_ar": "طلب قهوة في القاهرة",
+      "dialect": "egyptian",
+      "duration_seconds": 38,
+      "thumbnail_url": "https://cdn.dhou.app/thumbnails/vid-101.jpg",
+      "saved_at": "2026-11-08T20:50:00Z"
+    }
+  ],
+  "meta": {
+    "total_saved": 1
+  }
+}
+```
+
+---
+
+### 5.8 Simpan Idiom / Kalimat dari Video (Save Idiom Bridge)
+- **HTTP Method & Path**: `POST /api/v1/videos/:id/sentences/:sentenceId/save-idiom`
+- **Headers**: `Authorization: Bearer <token>`
+- **Request Body**:
+```json
+{
+  "phrase_ar": "عايز قهوة مضبوط لو سمحت",
+  "meaning_id": "Saya ingin kopi manis sedang tolong",
+  "transliteration": "'ayiz ahwa mazbut law samaht",
+  "dialect": "egyptian",
+  "context_note": "Dari video: Pesan Kopi di Kairo"
+}
+```
+- **Respons Sukses (201 Created)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "idm-vid-882",
+    "phrase_ar": "عايز قهوة مضبوط لو سمحت",
+    "meaning_id": "Saya ingin kopi manis sedang tolong",
+    "saved_at": "2026-11-08T20:50:10Z"
+  },
+  "meta": {
+    "current_quota_used": 14,
+    "max_quota": 20
+  }
+}
+```
+- **Respons Error Kuota Penuh (409 Conflict)**:
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERR_IDIOM_QUOTA_EXCEEDED",
+    "message": "Kuota idiom penuh (maksimal 20 idiom tersimpan). Hapus beberapa idiom lama untuk menyimpan idiom baru.",
+    "current_count": 20,
+    "max_limit": 20
+  }
+}
+```
+
+---
+
+### 5.9 Tabel Ringkasan Kode Error HTTP
 
 | Kode HTTP | Error Code | Skenario Pemicu | Solusi / Tindakan Frontend |
 | :--- | :--- | :--- | :--- |
 | `400 Bad Request` | `ERR_INVALID_DIALECT` | Mengirim filter dialek yang tidak terdaftar di sistem. | Fallback ke `dialect = all`. |
-| `401 Unauthorized` | `ERR_AUTH_REQUIRED` | Mencoba bookmark kata tanpa sesi login aktif. | Tampilkan Modal Autentikasi / Arahkan ke Login. |
+| `401 Unauthorized` | `ERR_AUTH_REQUIRED` | Mencoba bookmark kata / video tanpa sesi login aktif. | Tampilkan Modal Autentikasi / Arahkan ke Login. |
 | `404 Not Found` | `ERR_VIDEO_NOT_FOUND` | Video ID tidak ditemukan di basis data atau dihapus kurator. | Tampilkan pesan 404 ramah, navigasikan kembali ke feed. |
 | `409 Conflict` | `ERR_WORD_ALREADY_SAVED` | Menyimpan kata yang identik pada video yang sama. | Ditangani secara idempoten oleh backend; return status `200 OK`. |
+| `409 Conflict` | `ERR_IDIOM_QUOTA_EXCEEDED` | Kuota simpan idiom global pengguna telah mencapai batas 20 entri. | Tampilkan toast warning: ⚠️ *Kuota idiom penuh (maksimal 20 idiom tersimpan)*. |
 
 ---
 
@@ -368,15 +477,27 @@ CREATE TABLE public.user_saved_vocab (
 
 CREATE INDEX idx_user_saved_vocab_lookup ON public.user_saved_vocab (user_id, dialect, saved_at DESC);
 
--- 6. Tabel Progres Menonton Pengguna
+-- 6. Tabel Progres Menonton Pengguna & Status Shadowing
 CREATE TABLE public.user_video_progress (
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     video_id VARCHAR(64) NOT NULL REFERENCES public.videos(id) ON DELETE CASCADE,
     watched_seconds INT NOT NULL DEFAULT 0,
     is_completed BOOLEAN NOT NULL DEFAULT false,
+    shadowed_sentence_ids JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array string sentence_id yang telah diselesaikan shadowing-nya
     last_accessed_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     PRIMARY KEY (user_id, video_id)
 );
+
+-- 7. Tabel Video yang Disimpan Pengguna (Saved Videos / Bookmarks)
+CREATE TABLE public.saved_videos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    video_id VARCHAR(64) NOT NULL REFERENCES public.videos(id) ON DELETE CASCADE,
+    saved_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    CONSTRAINT uq_user_saved_video UNIQUE (user_id, video_id)
+);
+
+CREATE INDEX idx_user_saved_videos_lookup ON public.saved_videos (user_id, saved_at DESC);
 
 -- Row Level Security (RLS)
 ALTER TABLE public.videos ENABLE ROW LEVEL SECURITY;
@@ -384,6 +505,7 @@ ALTER TABLE public.video_sentences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.video_sentence_words ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_saved_vocab ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_video_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.saved_videos ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Publik boleh membaca master video & transkrip
 CREATE POLICY "Public videos are readable" ON public.videos FOR SELECT USING (is_published = true);
@@ -396,6 +518,7 @@ CREATE POLICY "Users insert own saved vocab" ON public.user_saved_vocab FOR INSE
 CREATE POLICY "Users delete own saved vocab" ON public.user_saved_vocab FOR DELETE TO authenticated USING (auth.uid() = user_id);
 
 CREATE POLICY "Users manage own video progress" ON public.user_video_progress FOR ALL TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users manage own saved videos" ON public.saved_videos FOR ALL TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 ```
 
 ---
@@ -524,3 +647,10 @@ CREATE POLICY "Users manage own video progress" ON public.user_video_progress FO
 | **T-VID-06** | Bookmark Sync | Kata belum pernah disimpan. | Mengetuk tombol 🔖 "Simpan ke Review". | Tombol berubah menjadi hijau "Tersimpan ✓", getaran haptic aktif, record bertambah di `user_saved_vocab`. |
 | **T-VID-07** | Shadowing Flow | Modal shadowing terbuka. | Tekan rekam $\rightarrow$ bicara $\rightarrow$ tekan stop. | Blob audio terbentuk, tombol "Suara Asli" dan "Suara Saya" aktif dan dapat diputar bergantian. |
 | **T-VID-08** | Mic Denied | Izin mikrofon browser dimatikan. | Mengetuk tombol rekam shadowing. | Sistem menampilkan dialog panduan izin mikrofon tanpa memicu crash aplikasi. |
+| **T-VID-09** | Global Stats Header | Pengguna berada di feed video utama. | Mengamati topbar header landing screen. | Judul "Video" di rata kiri; badge stats `[🔥 3] [⚡ ∞] [⭐ 150]` dan ikon bookmark `[🔖]` tampil di rata kanan. Di bawahnya tampil filter bar dialek `[Semua] [Fusha] [Mesir] [Syam]`. |
+| **T-VID-10** | Simpan Video (Save Video) | Pengguna sedang berada di player video atau feed video. | Mengetuk tombol bookmark video `[🔖 Simpan Video]`. | Ikon berubah menjadi amber `[🔖 Tersimpan ✓]`, toast "Video disimpan ke koleksi", record bertambah di `saved_videos`. |
+| **T-VID-11** | Buka Video Tersimpan | Pengguna memiliki 2 video tersimpan. | Mengetuk ikon bookmark `[🔖]` di header landing screen video. | Drawer/halaman Saved Videos terbuka menampilkan daftar video tersimpan dengan filter tab. |
+| **T-VID-12** | Simpan Idiom dari Video | Pengguna membuka transkrip video, kuota saat ini 12/20. | Mengetuk tombol `[🔖 Simpan Idiom]` pada baris kalimat transkrip. | Tombol berubah menjadi amber `[🔖 Tersimpan ✓]`, kuota bertambah menjadi 13/20, kalimat masuk ke kamus ungkapan tersimpan. |
+| **T-VID-13** | Kuota Simpan Idiom Penuh | Kuota simpan idiom pengguna sudah mencapai 20/20. | Mengetuk tombol simpan idiom pada kalimat video. | Sistem menolak aksi (HTTP 409) dan menampilkan toast peringatan: *"⚠️ Kuota idiom penuh (maksimal 20 idiom tersimpan)"*. |
+| **T-VID-14** | Indikator Shadowing Selesai | Pengguna telah merekam latihan shadowing untuk sebuah kalimat. | Menyelesaikan rekaman suara shadowing pada kalimat. | Status tersimpan lokal dan backend (`shadowed_sentence_ids`), tombol rekam berubah menjadi badge hijau `[✓ Selesai]`, dan counter header modal naik (misal: "Shadowing: 1/4 Selesai"). |
+
